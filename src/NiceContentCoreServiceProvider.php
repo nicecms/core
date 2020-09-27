@@ -18,6 +18,6 @@ class NiceContentCoreServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
 }
