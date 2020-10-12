@@ -1,5 +1,5 @@
 {
-    "name": "nice-content/core",
+    "name": "nicecms/core",
     "description": "Nice Content core package",
     "type": "library",
     "license": "MIT",
@@ -13,13 +13,13 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "NiceContent\\Core\\": "src/"
+            "Nice\\Core\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "NiceContent\\Core\\NiceContentCoreServiceProvider"
+                "Nice\\Core\\NiceCoreServiceProvider"
             ]
         }
     }
