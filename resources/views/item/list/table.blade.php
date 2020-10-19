@@ -20,7 +20,6 @@
             <th>
                 {{$attribute->param('name')}}
             </th>
-
         @endforeach
 
         <th>Состояние</th>
