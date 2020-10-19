@@ -42,7 +42,28 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
     public function value($key)
     {
+
+        if($key instanceof Attribute){
+            $key = $key->key();
+        }
+
         return data_get($this->values, $key);
+    }
+
+    public function setValue($key, $value)
+    {
+
+        $values = $this->values;
+
+        data_set($values, $key, $value);
+
+        $this->values = $values;
+
+    }
+
+
+    public function entity(){
+        return app('nice_entity_service')->make($this->entity);
     }
 
 }

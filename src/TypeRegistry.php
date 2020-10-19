@@ -10,16 +10,16 @@ class TypeRegistry
     protected $types = [];
 
     /**
-     * @param Type $type
+     * @param BaseType $type
      */
-    public function register(Type $type)
+    public function register(BaseType $type)
     {
         $this->types[$type->name()] = $type;
     }
 
     /**
      * @param $name
-     * @return Type
+     * @return BaseType
      */
     public function get($name)
     {

@@ -22,9 +22,9 @@ class NiceCoreServiceProvider extends ServiceProvider
             return new EntityService();
         });
 
-        $this->app->singleton('nice_type_registry', function ($app) {
-            return new TypeRegistry();
-        });
+//        $this->app->singleton('nice_type_registry', function ($app) {
+//            return new TypeRegistry();
+//        });
 
         $this->mergeConfigFrom(
             __DIR__ . '/../config/nice.php', 'nice'

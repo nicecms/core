@@ -18,6 +18,7 @@ class CreateNiceItems extends Migration
             $table->timestamps();
             $table->string('entity')->nullable();
             $table->jsonb('values')->default('[]');
+            $table->string('state')->default('published');
             $table->unsignedInteger('position')->nullable();
         });
     }

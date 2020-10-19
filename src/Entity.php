@@ -31,18 +31,23 @@ class Entity
     {
         return $this->key;
     }
+
     /**
      *
      *
      * @return Collection
      */
 
-    public function attributes()
+    public function attributes($only = [])
     {
 
         $attributes = new Collection();
 
         foreach (data_get($this->schema, 'attributes', []) as $key => $schema) {
+            if ($only && !in_array($key, $only)) {
+                continue;
+            }
+
             $attribute = new Attribute($key, $schema);
             $attributes->push($attribute);
         }
@@ -58,14 +63,24 @@ class Entity
      */
     public function param($key, $default = null)
     {
-        $result = data_get($this->schema,  $key, $default);
+        $result = data_get($this->schema, $key, $default);
 
         return $result;
     }
 
-    public function isMultiple(){
+    public function isMultiple()
+    {
         return data_get($this->schema, 'multiple');
     }
 
+    public function isSortable()
+    {
+        return data_get($this->schema, 'sortable');
+    }
+
+    public function makeItem()
+    {
+        return new Item(['entity' => $this->key()]);
+    }
 
 }

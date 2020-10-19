@@ -2,6 +2,8 @@
 
 namespace Nice\Core;
 
+use Illuminate\Support\Str;
+
 class Attribute
 {
     /**
@@ -14,7 +16,7 @@ class Attribute
     protected $schema = [];
 
     /**
-     * @type Type|null
+     * @type BaseType|null
      */
     protected $type;
 
@@ -41,14 +43,17 @@ class Attribute
 
     public function type()
     {
-        return app('nice_type_registry')->get($this->typeKey());
+
+        $name = Str::ucfirst($this->typeKey());
+        $class = "Nice\\Core\\Types\\{$name}Type";
+        return new $class;
     }
 
     public function input($value = null)
     {
-        $type = $this->type();
+//        $type = $this->type();
 
-        return view('nice-' . $type->name() . '-type::input', ['attribute' => $this, 'type' => $type, 'value' => $value]);
+        return view("nice::types." . $this->typeKey() . ".input", ['attribute' => $this, 'value' => $value]);
     }
 
     /**
@@ -58,7 +63,7 @@ class Attribute
      */
     public function param($key, $default = null)
     {
-        $result = data_get($this->schema,  $key, $default);
+        $result = data_get($this->schema, $key, $default);
 
         return $result;
     }
