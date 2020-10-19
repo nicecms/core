@@ -2,7 +2,6 @@
 
 @section('breadcrumbs')
 
-
     {{--    @if($entity->isMultiple())--}}
     {{--        <li class="breadcrumb-item"><a href="{{route('admin.entity.index', [$entity->name()])}}">{{$entity->getNamePlural()}}</a>--}}
     {{--        </li>--}}
@@ -10,7 +9,6 @@
 
     <li class="breadcrumb-item active">{{$entity->param('name')}}</li>
 @endsection
-
 
 @section('content')
 
@@ -24,7 +22,6 @@
     </div>
 
     {{--/верх--}}
-
 
     @include('nice::item.list.table')
 
