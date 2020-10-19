@@ -61,7 +61,7 @@
 
             <td style="font-style: normal; min-width: 212px">
                 <a href="{{route(config('nice.route_name').'item.edit', [$item->entity, $item->id])}}" class="btn btn-sm btn-primary">редактировать</a>
-                <a href="{{route(config('nice.route_name').'item.destroy', [$item->id])}}" class="btn btn-sm btn-danger">удалить</a>
+                <a href="{{route(config('nice.route_name').'item.destroy', [$item->entity, $item->id])}}" class="btn btn-sm btn-danger">удалить</a>
             </td>
         </tr>
 

@@ -21,6 +21,9 @@
             "providers": [
                 "Nice\\Core\\NiceCoreServiceProvider"
             ]
+        },
+        "branch-alias": {
+            "dev-master": "1.x-dev"
         }
     }
 }
