@@ -52,6 +52,8 @@ class ItemController extends \Illuminate\Routing\Controller
 
         }
 
+        $item->url = $request->input('url');
+
         $item->save();
 
         return redirect()->route(config('nice.route_name') . 'item.index', $entity->key());
@@ -89,6 +91,9 @@ class ItemController extends \Illuminate\Routing\Controller
             $item->setValue($attribute->key(), $storable);
 
         }
+
+        $item->url = $request->input('url');
+
 
         $item->save();
 

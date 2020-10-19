@@ -2,12 +2,12 @@
 
 @section('breadcrumbs')
 
-    {{--    @if($entity->isMultiple())--}}
-    {{--        <li class="breadcrumb-item"><a href="{{route('admin.entity.index', [$entity->name()])}}">{{$entity->getNamePlural()}}</a>--}}
-    {{--        </li>--}}
-    {{--    @endif--}}
+        @if($entity->isMultiple())
+            <li class="breadcrumb-item"><a href="{{route(config('nice.route_name').'item.index', $entity->key())}}">{{$entity->param('name_plural')}}</a>
+            </li>
+        @endif
 
-    <li class="breadcrumb-item active">{{$entity->param('name')}}</li>
+    <li class="breadcrumb-item active">Список</li>
 @endsection
 
 @section('content')

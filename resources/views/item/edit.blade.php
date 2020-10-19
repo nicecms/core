@@ -3,10 +3,10 @@
 @section('breadcrumbs')
 
 
-    {{--    @if($entity->isMultiple())--}}
-    {{--        <li class="breadcrumb-item"><a href="{{route('admin.entity.index', [$entity->name()])}}">{{$entity->getNamePlural()}}</a>--}}
-    {{--        </li>--}}
-    {{--    @endif--}}
+    @if($entity->isMultiple())
+        <li class="breadcrumb-item"><a href="{{route(config('nice.route_name').'item.index', $entity->key())}}">{{$entity->param('name_plural')}}</a>
+        </li>
+    @endif
 
     <li class="breadcrumb-item active">{{$item->value($entity->param('title'))}}</li>
 @endsection
@@ -25,6 +25,23 @@
             <div class="card">
 
                 <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        {!! Form::label('url', 'URL') !!}
+                                        {!! Form::text('url', old('url', $item->url), ['class' => 'form-control', 'placeholder' => 'URL']) !!}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
                     @foreach($entity->attributes() as $attribute)
 
                         <div class="row">
