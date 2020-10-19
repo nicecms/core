@@ -65,17 +65,34 @@ class ItemController extends \Illuminate\Routing\Controller
 
     public function edit(Request $request, $name, $id)
     {
-//        $entity = app('nice_entity_service')->make($name);
 
         $item = Item::findOrFail($id);
+
         $entity = $item->entity();
 
 
         return view('nice::item.edit', ['entity' => $entity, 'item' => $item]);
     }
 
-    public function update()
+    public function update(Request $request, $name, $id)
     {
+        $item = Item::findOrFail($id);
+
+        $entity = $item->entity();
+
+        foreach ($entity->attributes() as $attribute) {
+
+            $data = $request->input($attribute->key());
+
+            $storable = $attribute->type()->storable($data);
+
+            $item->setValue($attribute->key(), $storable);
+
+        }
+
+        $item->save();
+
+        return redirect()->route(config('nice.route_name') . 'item.index', $entity->key());
 
     }
 
