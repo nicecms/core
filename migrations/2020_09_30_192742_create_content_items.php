@@ -31,6 +31,6 @@ class CreateContentItems extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nice_items');
+        Schema::dropIfExists('content_items');
     }
 }

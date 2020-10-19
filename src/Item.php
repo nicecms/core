@@ -8,7 +8,7 @@ class Item extends \Illuminate\Database\Eloquent\Model
     /**
      * @type string
      */
-    protected $table = "nice_items";
+    protected $table = "content_items";
 
     /**
      * @type array
