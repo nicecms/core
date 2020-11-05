@@ -13,5 +13,5 @@ Route::prefix($prefix)->name($name)->group(function () {
     Route::get("/item/destroy/{entity}/{id}", "Nice\\Core\\Controllers\\ItemController@destroy")->name("item.destroy");
 //    Route::post("/items/assign-positions", "Nice\\Core\\Controllers\\ItemController@assignPositions")->name("item.assign_positions");
 
-});
+})->middleware('littlegatekeeper');
 
