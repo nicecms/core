@@ -3,7 +3,7 @@
 $prefix = config('nice.route_prefix');
 $name = config('nice.route_name');
 
-Route::prefix($prefix)->name($name)->group(function () {
+Route::prefix($prefix)->name($name)->middleware(config('nice.dashboard_middleware'))->group(function () {
 
     Route::get("/item/create/{entity}", "Nice\\Core\\Controllers\\ItemController@create")->name("item.create");
     Route::post("/item/store/{entity}", "Nice\\Core\\Controllers\\ItemController@store")->name("item.store");
@@ -13,5 +13,5 @@ Route::prefix($prefix)->name($name)->group(function () {
     Route::get("/item/destroy/{entity}/{id}", "Nice\\Core\\Controllers\\ItemController@destroy")->name("item.destroy");
 //    Route::post("/items/assign-positions", "Nice\\Core\\Controllers\\ItemController@assignPositions")->name("item.assign_positions");
 
-})->middleware('littlegatekeeper');
+});
 
