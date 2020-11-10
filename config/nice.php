@@ -6,6 +6,5 @@ return [
     'schema_config_key' => 'entities',
     'route_prefix' => 'dashboard/content',
     'route_name' => 'dashboard.content.',
-
-    'dashboard_middleware' => 'littlegatekeeper'
+    'dashboard_middleware' => ['web', 'littlegatekeeper']
 ];
