@@ -9,7 +9,7 @@ use Nice\Core\Item;
 class ItemController extends \Illuminate\Routing\Controller
 {
 
-    public function index($name)
+    public function index(Request $request, $name)
     {
 
         $entity = app('nice_entity_service')->make($name);
@@ -18,20 +18,40 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $items->where('entity', $entity->key());
 
+
+        if($request->input('parent_id')){
+
+            $parent = Item::findOrFail($request->input('parent_id'));
+
+            $items->where('parent_id', $parent->id);
+        }
+        else{
+            $parent = null;
+        }
+
         $items->orderBy('created_at', 'desc');
 
         $items = $items->get();
 
 
-        return view('nice::item.index', ['entity' => $entity, 'items' => $items]);
+        return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent]);
 
     }
 
-    public function create($name)
+    public function create(Request $request, $name)
     {
         $entity = app('nice_entity_service')->make($name);
 
-        return view('nice::item.create', ['entity' => $entity]);
+
+        if($request->input('parent_id')){
+
+            $parent = Item::findOrFail($request->input('parent_id'));
+        }
+        else{
+            $parent = null;
+        }
+
+        return view('nice::item.create', ['entity' => $entity,  'parent' => $parent]);
 
     }
 
@@ -54,9 +74,11 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $item->url = $request->input('url');
 
+        $item->parent_id = $request->input('parent_id');
+
         $item->save();
 
-        return redirect()->route(config('nice.route_name') . 'item.index', $entity->key());
+        return redirect()->to($item->editorIndexRoute());
 
     }
 
@@ -70,10 +92,13 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $item = Item::findOrFail($id);
 
+        $parent = $item->parent;
+
         $entity = $item->entity();
 
 
-        return view('nice::item.edit', ['entity' => $entity, 'item' => $item]);
+
+        return view('nice::item.edit', ['entity' => $entity, 'item' => $item,  'parent' => $parent]);
     }
 
     public function update(Request $request, $name, $id)
@@ -97,12 +122,19 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $item->save();
 
-        return redirect()->route(config('nice.route_name') . 'item.index', $entity->key());
+        return redirect()->to($item->editorIndexRoute());
 
     }
 
-    public function destroy()
+    public function destroy(Request $request, $name, $id)
     {
+        $item = Item::findOrFail($id);
+
+        $item->delete();
+
+
+        return redirect()->to($item->editorIndexRoute());
+
 
     }
 

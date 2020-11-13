@@ -2,10 +2,13 @@
 
 namespace Nice\Core;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class Entity
 {
+
+    use EntityRoutes;
 
     /**
      * @type string
@@ -30,6 +33,16 @@ class Entity
     public function key()
     {
         return $this->key;
+    }
+
+    public function name()
+    {
+        return $this->param('name');
+    }
+
+    public function namePlural()
+    {
+        return $this->param('name_plural');
     }
 
     /**
@@ -82,5 +95,25 @@ class Entity
     {
         return new Item(['entity' => $this->key()]);
     }
+
+
+
+    public function children()
+    {
+
+        $entitites = app('nice_entity_service')->allEntities();
+
+        return Arr::where($entitites, fn($item) => $item->param('parent') === $this->key());
+    }
+
+    public function parent()
+    {
+
+        return app('nice_entity_service')->find($this->param('parent'));
+
+    }
+
+
+
 
 }

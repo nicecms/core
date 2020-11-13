@@ -3,8 +3,20 @@
 @section('breadcrumbs')
 
 
+
+    @if($parent)
+        @foreach($parent->parentsChain() as $pItem)
+
+            <li class="breadcrumb-item">
+                <a href="{{$pItem->editorIndexRoute()}}">{{$pItem->title()}}</a>
+            </li>
+
+        @endforeach
+
+    @endif
+
     @if($entity->isMultiple())
-        <li class="breadcrumb-item"><a href="{{route(config('nice.route_name').'item.index', $entity->key())}}">{{$entity->param('name_plural')}}</a>
+        <li class="breadcrumb-item"><a href="{{$item->editorIndexRoute()}}">{{$entity->param('name_plural')}}</a>
         </li>
     @endif
 

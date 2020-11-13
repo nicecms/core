@@ -4,6 +4,7 @@ namespace Nice\Core;
 
 class Item extends \Illuminate\Database\Eloquent\Model
 {
+    use ItemRoutes;
 
     /**
      * @type string
@@ -43,7 +44,7 @@ class Item extends \Illuminate\Database\Eloquent\Model
     public function value($key)
     {
 
-        if($key instanceof Attribute){
+        if ($key instanceof Attribute) {
             $key = $key->key();
         }
 
@@ -61,9 +62,47 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
     }
 
-
-    public function entity(){
+    public function entity()
+    {
         return app('nice_entity_service')->make($this->entity);
     }
 
+    public function allChildren()
+    {
+        return $this->hasMany(Item::class, 'parent_id');
+    }
+
+    public function children($entity)
+    {
+
+        if($entity instanceof Entity){
+            $entity = $entity->key();
+        }
+
+        return $this->allChildren()->where('entity', $entity);
+    }
+
+    public function parentsChain()
+    {
+
+        $parents = [$this];
+
+        $parent = $this->parent;
+
+        while ($parent) {
+
+            $parents[] = $parent;
+
+            $parent = $parent->parent;
+
+        }
+
+        return $parents;
+
+    }
+
+    public function title()
+    {
+        return $this->value($this->entity()->param('title'));
+    }
 }

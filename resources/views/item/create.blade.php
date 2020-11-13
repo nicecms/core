@@ -3,30 +3,69 @@
 @section('breadcrumbs')
 
 
+
+    @if($parent)
+        @foreach($parent->parentsChain() as $pItem)
+
+            <li class="breadcrumb-item">
+                <a href="{{$pItem->editorIndexRoute()}}">{{$pItem->title()}}</a>
+            </li>
+
+        @endforeach
+
+    @endif
+
     @if($entity->isMultiple())
-        <li class="breadcrumb-item"><a href="{{route(config('nice.route_name').'item.index', $entity->key())}}">{{$entity->param('name_plural')}}</a>
+        <li class="breadcrumb-item"><a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
         </li>
     @endif
 
-    <li class="breadcrumb-item active">Добавление</li>
+    <li class="breadcrumb-item active">Cоздание</li>
 @endsection
 
 
 @section('content')
 
-    {!! Form::open(['files' => true, 'route' => [ config('nice.route_name').'item.store', $entity->key()], 'method' => 'POST' ]) !!}
+    {!! Form::open(['files' => true, 'url' => $entity->editorStoreRoute(), 'method' => 'POST' ]) !!}
 
-    <input type="hidden" name="entity" value="{{$entity->key()}}">
 
-    <span class="h3 d-block mb-3">{{$entity->param('name')}}: создание</span>
 
-    <div class="row">
+    @if($parent)
+
+        {{Form::hidden('parent_id', $parent->id)}}
+
+    @endif
+
+
+    <div class="h3">
+
+        {{$entity->param('name')}}: создание
+
+
+    </div>
+
+    <div class="h5 text-muted">
+
+        @if($parent)
+
+            {{$parent->entity()->name()}} - {{$parent->title()}}
+
+        @endif
+
+
+
+    </div>
+
+
+    <div class="row mt-3">
 
         <div class="col-8">
 
             <div class="card">
 
                 <div class="card-body">
+
+
 
                     <div class="row">
                         <div class="col-12">

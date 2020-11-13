@@ -2,8 +2,20 @@
 
 @section('breadcrumbs')
 
+
+    @if($parent)
+        @foreach($parent->parentsChain() as $pItem)
+
+            <li class="breadcrumb-item">
+                <a href="{{$pItem->editorIndexRoute()}}">{{$pItem->title()}}</a>
+            </li>
+
+        @endforeach
+
+    @endif
+
         @if($entity->isMultiple())
-            <li class="breadcrumb-item"><a href="{{route(config('nice.route_name').'item.index', $entity->key())}}">{{$entity->param('name_plural')}}</a>
+            <li class="breadcrumb-item"><a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
             </li>
         @endif
 
@@ -15,10 +27,30 @@
 
     {{--верх--}}
 
-    <div class="h4 mb-3">{{$entity->param('name_plural')}}</div>
+    <div class="h3">
 
-    <div class=" mb-3">
-        <a href="{{route(config('nice.route_name').'item.create', $entity->key())}}" class="btn btn-success">Добавить</a>
+        {{$entity->param('name_plural')}}
+
+
+
+    </div>
+
+    <div class="h5 text-muted">
+
+        @if($parent)
+
+            {{$parent->entity()->name()}} - {{$parent->title()}}
+
+        @endif
+
+
+
+    </div>
+
+
+
+    <div class=" mb-3 mt-3">
+        <a href="{{$entity->editorCreateRoute($parent)}}" class="btn btn-success">Добавить</a>
     </div>
 
     {{--/верх--}}
