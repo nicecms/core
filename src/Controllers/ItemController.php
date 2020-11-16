@@ -18,21 +18,18 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $items->where('entity', $entity->key());
 
-
-        if($request->input('parent_id')){
+        if ($request->input('parent_id')) {
 
             $parent = Item::findOrFail($request->input('parent_id'));
 
             $items->where('parent_id', $parent->id);
-        }
-        else{
+        } else {
             $parent = null;
         }
 
         $items->orderBy('created_at', 'desc');
 
         $items = $items->get();
-
 
         return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent]);
 
@@ -42,16 +39,14 @@ class ItemController extends \Illuminate\Routing\Controller
     {
         $entity = app('nice_entity_service')->make($name);
 
-
-        if($request->input('parent_id')){
+        if ($request->input('parent_id')) {
 
             $parent = Item::findOrFail($request->input('parent_id'));
-        }
-        else{
+        } else {
             $parent = null;
         }
 
-        return view('nice::item.create', ['entity' => $entity,  'parent' => $parent]);
+        return view('nice::item.create', ['entity' => $entity, 'parent' => $parent]);
 
     }
 
@@ -62,17 +57,23 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $item = $entity->makeItem();
 
+        $item->url = $request->input('url');
+
         foreach ($entity->attributes() as $attribute) {
 
-            $data = $request->input($attribute->key());
+            if ($request->hasFile($attribute->key())) {
+                $data = $request->file($attribute->key());
 
-            $storable = $attribute->type()->storable($data);
+            } else {
+                $data = $request->input($attribute->key());
+
+            }
+
+            $storable = $attribute->type()->storable($data, $attribute, $item);
 
             $item->setValue($attribute->key(), $storable);
 
         }
-
-        $item->url = $request->input('url');
 
         $item->parent_id = $request->input('parent_id');
 
@@ -96,9 +97,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $entity = $item->entity();
 
-
-
-        return view('nice::item.edit', ['entity' => $entity, 'item' => $item,  'parent' => $parent]);
+        return view('nice::item.edit', ['entity' => $entity, 'item' => $item, 'parent' => $parent]);
     }
 
     public function update(Request $request, $name, $id)
@@ -109,16 +108,21 @@ class ItemController extends \Illuminate\Routing\Controller
 
         foreach ($entity->attributes() as $attribute) {
 
-            $data = $request->input($attribute->key());
+            if ($request->hasFile($attribute->key())) {
+                $data = $request->file($attribute->key());
 
-            $storable = $attribute->type()->storable($data);
+            } else {
+                $data = $request->input($attribute->key());
+
+            }
+
+            $storable = $attribute->type()->storable($data, $attribute, $item);
 
             $item->setValue($attribute->key(), $storable);
 
         }
 
         $item->url = $request->input('url');
-
 
         $item->save();
 
@@ -132,9 +136,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $item->delete();
 
-
         return redirect()->to($item->editorIndexRoute());
-
 
     }
 
