@@ -23,6 +23,10 @@ class ImageType extends BaseType
     public function storable($data, $attibute = null, $item = null)
     {
 
+        if (!$data) {
+            return null;
+        }
+
         $file = $data;
 
         $disk = $attibute->param('disk', config('nice.storage_disk'));
@@ -31,7 +35,7 @@ class ImageType extends BaseType
 
         $ext = $data->extension();
 
-        $name = $item->url.".".$ext;
+        $name = $item->url . "." . $ext;
 
         $path = Storage::disk($disk)->putFileAs($directory, $file, $name);
 
@@ -40,6 +44,5 @@ class ImageType extends BaseType
         return $url;
 
     }
-
 
 }
