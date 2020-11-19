@@ -26,9 +26,28 @@
 
 @section('content')
 
+
+
     {!! Form::open(['files' => true, 'route' => [ config('nice.route_name').'item.update', $entity->key(), $item->id], 'method' => 'POST' ]) !!}
 
-    <span class="h3 d-block mb-3">{{$item->value($entity->param('title'))}}</span>
+    <h3 >{{$item->value($entity->param('title'))}}</h3>
+
+
+    <div class="h5 text-muted">
+
+        @if($parent)
+
+            {{$parent->entity()->name()}} - {{$parent->title()}}
+
+        @endif
+
+
+
+    </div>
+
+    <div class="mb-3">
+        Ссылка: <a href="{{$item->fullUrl()}}">{{$item->fullUrl()}}</a>
+    </div>
 
     <div class="row">
 

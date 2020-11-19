@@ -28,6 +28,11 @@ class Item extends \Illuminate\Database\Eloquent\Model
      */
     public $timestamps = true;
 
+    /**
+     * @type string
+     */
+    protected $fullUrl = null;
+
     public function childs()
     {
         return $this->hasMany(Item::class, 'parent_id');
@@ -99,7 +104,6 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
         }
 
-
         return $parents;
 
     }
@@ -107,5 +111,32 @@ class Item extends \Illuminate\Database\Eloquent\Model
     public function title()
     {
         return $this->value($this->entity()->param('title'));
+    }
+
+    public function fullUrl()
+    {
+
+        if ($this->fullUrl) {
+            return $this->fullUrl;
+        }
+
+        $chain = $this->parentsChain();
+
+        $data = $chain->pluck('url', 'entity');
+
+        $template = $this->entity()->param('url');
+
+        $url = $template;
+
+        foreach ($data as $key => $value) {
+
+            $url = str_replace("{".$key."}", $value, $url);
+
+        }
+
+        $this->fullUrl = config('app.url').$url;
+
+        return $url;
+
     }
 }

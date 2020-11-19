@@ -18,8 +18,11 @@
         @foreach($entity->attributes($entity->param('editor.list_attributes', [])) as $attribute)
             <th>
                 {{$attribute->param('name')}}
+
             </th>
         @endforeach
+
+
 
 
         @if($entity->children())
@@ -37,7 +40,15 @@
 
         @endif
 
+
+
+
+
         <th>Состояние</th>
+
+            @if($entity->param('editor.with_url'))
+                <th>Ссылка</th>
+            @endif
 
         <th>
             Действия
@@ -71,17 +82,17 @@
             @endif
 
 
-            @foreach($entity->attributes($entity->param('editor.list_attributes', [])) as  $attribute)
+            @foreach($entity->param('editor.list_attributes', []) as  $attribute)
                 <td>
                     {{$item->value($attribute)}}
                 </td>
-            @endforeach
 
+            @endforeach
 
 
             @if($entity->children())
 
-                <th>
+                <td>
 
                     @foreach($entity->children() as $childEntity)
 
@@ -90,15 +101,27 @@
                         </div>
 
                     @endforeach
-                </th>
+                </td>
 
             @endif
+
+
 
             <td>
                 {{$item->state === 'draft' ? 'черновик' : 'опубликовано'}}
             </td>
 
+                @if($entity->param('editor.with_url'))
+                    <td>
+
+                        <a href="{{$item->fullUrl()}}" target="_blank">{{$item->fullUrl()}}</a>
+
+                    </td>
+                @endif
+
             <td style="font-style: normal; min-width: 212px">
+
+
                 <a href="{{$item->editorEditRoute()}}" class="btn btn-sm btn-primary">редактировать</a>
                 <a href="{{$item->editorDestroyRoute()}}" class="btn btn-sm btn-danger">удалить</a>
             </td>

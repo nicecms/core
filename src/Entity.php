@@ -69,6 +69,19 @@ class Entity
 
     }
 
+    public function attribute($key)
+    {
+
+        $schema = data_get($this->schema, 'attributes.' . $key, []);
+
+        if(!$schema){
+            return null;
+        }
+
+        return $attribute = new Attribute($key, $schema);
+
+    }
+
     /**
      * @param string $key
      * @param null|string|array $default
@@ -96,8 +109,6 @@ class Entity
         return new Item(['entity' => $this->key()]);
     }
 
-
-
     public function children()
     {
 
@@ -112,8 +123,5 @@ class Entity
         return app('nice_entity_service')->find($this->param('parent'));
 
     }
-
-
-
 
 }
