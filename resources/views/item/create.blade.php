@@ -5,7 +5,7 @@
 
 
     @if($parent)
-        @foreach($parent->parentsChain() as $pItem)
+        @foreach($parent->parentsChain()->reverse() as $pItem)
 
             <li class="breadcrumb-item">
                 <a href="{{$pItem->editorIndexRoute()}}">{{$pItem->title()}}</a>

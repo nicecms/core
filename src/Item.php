@@ -2,6 +2,8 @@
 
 namespace Nice\Core;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class Item extends \Illuminate\Database\Eloquent\Model
 {
     use ItemRoutes;
@@ -75,7 +77,7 @@ class Item extends \Illuminate\Database\Eloquent\Model
     public function children($entity)
     {
 
-        if($entity instanceof Entity){
+        if ($entity instanceof Entity) {
             $entity = $entity->key();
         }
 
@@ -85,17 +87,18 @@ class Item extends \Illuminate\Database\Eloquent\Model
     public function parentsChain()
     {
 
-        $parents = [$this];
+        $parents = new Collection([$this]);
 
         $parent = $this->parent;
 
         while ($parent) {
 
-            $parents[] = $parent;
+            $parents->push($parent);
 
             $parent = $parent->parent;
 
         }
+
 
         return $parents;
 

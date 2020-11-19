@@ -2,24 +2,22 @@
 
 @section('breadcrumbs')
 
-
     @if($parent)
-        @foreach($parent->parentsChain() as $pItem)
+        @foreach($parent->parentsChain()->reverse() as $pItem)
 
             <li class="breadcrumb-item">
                 <a href="{{$pItem->editorIndexRoute()}}">{{$pItem->title()}}</a>
             </li>
 
         @endforeach
-
     @endif
 
-        @if($entity->isMultiple())
-            <li class="breadcrumb-item"><a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
-            </li>
-        @endif
+    <li class="breadcrumb-item">
+        <a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
+    </li>
 
     <li class="breadcrumb-item active">Список</li>
+
 @endsection
 
 @section('content')
@@ -31,8 +29,6 @@
 
         {{$entity->param('name_plural')}}
 
-
-
     </div>
 
     <div class="h5 text-muted">
@@ -42,8 +38,6 @@
             {{$parent->entity()->name()}} - {{$parent->title()}}
 
         @endif
-
-
 
     </div>
 
