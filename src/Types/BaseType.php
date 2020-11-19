@@ -14,4 +14,8 @@ abstract class BaseType
         return (string)$data;
     }
 
+    public function isInputFile(){
+        return false;
+    }
+
 }

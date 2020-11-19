@@ -61,8 +61,12 @@ class ItemController extends \Illuminate\Routing\Controller
 
         foreach ($entity->attributes() as $attribute) {
 
-            if ($request->hasFile($attribute->key())) {
+            if ($attribute->type()->isInputFile()) {
                 $data = $request->file($attribute->key());
+
+                if (!$data) {
+                    continue;
+                }
 
             } else {
                 $data = $request->input($attribute->key());

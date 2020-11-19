@@ -45,4 +45,9 @@ class ImageType extends BaseType
 
     }
 
+
+    public function isInputFile(){
+        return true;
+    }
+
 }
