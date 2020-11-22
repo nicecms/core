@@ -5,10 +5,10 @@ namespace Nice\Core;
 trait EntityRoutes
 {
 
-    public function editorIndexRoute($parent = null)
+    public function editorIndexRoute($parent = null, $query = [])
     {
 
-        $query = [$this->key()];
+        $query = [$this->key()] + $query;
 
         if ($parent) {
             $query['parent_id'] = $parent->id;
@@ -18,11 +18,10 @@ trait EntityRoutes
 
     }
 
-    public function editorCreateRoute($parent = null)
+    public function editorCreateRoute($parent = null, $query = [])
     {
 
-        $query = [$this->key()];
-
+        $query = [$this->key()] + $query;
 
         if ($parent) {
             $query['parent_id'] = $parent->id;
@@ -31,6 +30,7 @@ trait EntityRoutes
         return route(config('nice.route_name') . 'item.create', $query);
 
     }
+
     public function editorStoreRoute()
     {
 

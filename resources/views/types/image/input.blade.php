@@ -4,8 +4,8 @@
             <img src="{{$value}}" class="img-thumbnail" alt="">
         </div>
     </div>
-
 @endif
+
 <div class="row">
     <div class="col-12">
         <div class="form-group">

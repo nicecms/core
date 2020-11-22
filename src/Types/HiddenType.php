@@ -4,11 +4,11 @@ namespace Nice\Core\Types;
 
 use Nice\Core\Types\BaseType;
 
-class TextType extends BaseType
+class HiddenType extends BaseType
 {
 
     public function key()
     {
-        return 'text';
+        return 'hidden';
     }
 }

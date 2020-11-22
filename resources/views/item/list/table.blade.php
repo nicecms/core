@@ -1,4 +1,6 @@
-<table class="table {{$entity->isSortable() ?: 'table-striped' }} table-bordered entities">
+
+
+<table class="table {{$entity->isSortable() ?: 'table-striped' }} table-bordered items">
 
     <thead>
 
@@ -165,7 +167,7 @@
     <script type="text/javascript">
         $(function () {
 
-            $('.entities tbody').sortable(
+            $('.items tbody').sortable(
                 {
                     handle: '.lever',
                     placeholder: 'placeholder_row',
@@ -178,13 +180,13 @@
 
                         var ids = []
 
-                        $('[data-entity-id]').each(function (index) {
+                        $('[data-item-id]').each(function (index) {
 
-                            ids.push($(this).data('entity-id'))
+                            ids.push($(this).data('item-id'))
 
                         })
 
-                        $.post('{{route('admin.entity.set_positions')}}', {entity_ids: ids}, function (data) {
+                        $.post('{{route(config('nice.route_name').'item.assign_positions')}}', {entity_ids: ids}, function (data) {
 
                             //
 

@@ -9,31 +9,55 @@ use Nice\Core\Item;
 class ItemController extends \Illuminate\Routing\Controller
 {
 
+    public function __construct()
+    {
+
+    }
+
     public function index(Request $request, $name)
     {
 
         $entity = app('nice_entity_service')->make($name);
 
+        /** @type Entity $entity */
+
         $items = Item::query();
 
         $items->where('entity', $entity->key());
 
+        # передача внешнего параметра
+
+        if ($entity->hasExternal()) {
+            $externalValue = $request->input($entity->externalKey());
+
+            if($externalValue === null){
+                throw new \Exception('Undefined request external value for '.$entity->externalKey());
+            }
+
+            $items->whereValueOf($entity->externalKey(), $externalValue);
+
+        } else {
+            $externalValue = null;
+        }
+
+        #
+
         if ($request->input('parent_id')) {
 
             $parent = Item::findOrFail($request->input('parent_id'));
-
             $items->where('parent_id', $parent->id);
+
         } else {
             $parent = null;
         }
 
+        #
 
-        $items->orderBy('created_at', 'desc');
+        $items->givenOrder();
 
         $items = $items->get();
 
-
-        return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent]);
+        return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent, 'externalValue' => $externalValue]);
 
     }
 
@@ -41,14 +65,32 @@ class ItemController extends \Illuminate\Routing\Controller
     {
         $entity = app('nice_entity_service')->make($name);
 
+        # передача обязательных значений
+
+        if ($entity->hasExternal()) {
+
+            $externalValue = $request->input($entity->externalKey());
+
+            if($externalValue === null){
+                throw new \Exception('Undefined request external value for '.$entity->externalKey());
+            }
+
+        } else {
+            $externalValue = null;
+        }
+
+
+        #
+
         if ($request->input('parent_id')) {
 
             $parent = Item::findOrFail($request->input('parent_id'));
+
         } else {
             $parent = null;
         }
 
-        return view('nice::item.create', ['entity' => $entity, 'parent' => $parent]);
+        return view('nice::item.create', ['entity' => $entity, 'parent' => $parent, 'externalValue' => $externalValue]);
 
     }
 
@@ -103,7 +145,18 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $entity = $item->entity();
 
-        return view('nice::item.edit', ['entity' => $entity, 'item' => $item, 'parent' => $parent]);
+
+        # передача внешнего параметра
+
+        if ($entity->hasExternal()) {
+            $externalValue = $item->rawValue($entity->externalKey());
+
+        } else {
+            $externalValue = null;
+        }
+
+
+        return view('nice::item.edit', ['entity' => $entity, 'item' => $item, 'parent' => $parent, 'externalValue' => $externalValue]);
     }
 
     public function update(Request $request, $name, $id)
@@ -148,6 +201,15 @@ class ItemController extends \Illuminate\Routing\Controller
 
         return redirect()->to($item->editorIndexRoute());
 
+    }
+
+    public function assignPositions(Request $request)
+    {
+        foreach ($request->entity_ids as $position => $id) {
+            Item::where('id', $id)->update(['position' => $position]);
+        }
+
+        return ['success' => true];
     }
 
 }

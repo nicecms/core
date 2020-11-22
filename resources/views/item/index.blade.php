@@ -2,6 +2,16 @@
 
 @section('breadcrumbs')
 
+
+    {{--    Если есть привязка к внешнему объекту - добавляем ссылку на него в крошки--}}
+    @if($externalValue)
+        <li class="breadcrumb-item">
+            <a href="{{$entity->externalAttribute()->getExternalUrl($externalValue)}}">{{$entity->externalAttribute()->getValue($externalValue)}}</a>
+        </li>
+    @endif
+
+    {{-- Ссылки по цепочке родителей --}}
+
     @if($parent)
         @foreach($parent->parentsChain()->reverse() as $pItem)
 
@@ -39,12 +49,17 @@
 
         @endif
 
+
+        @if($externalValue)
+            <div>{{$entity->externalAttribute()->name()}}: {{$entity->externalAttribute()->getValue($externalValue)}}</div>
+        @endif
+
     </div>
 
 
 
     <div class=" mb-3 mt-3">
-        <a href="{{$entity->editorCreateRoute($parent)}}" class="btn btn-success">Добавить</a>
+        <a href="{{$entity->editorCreateRoute($parent, ($externalValue ? [$entity->externalKey() => $externalValue] : []))}}" class="btn btn-success">Добавить</a>
     </div>
 
     {{--/верх--}}

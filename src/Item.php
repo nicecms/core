@@ -3,6 +3,8 @@
 namespace Nice\Core;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Arr;
 
 class Item extends \Illuminate\Database\Eloquent\Model
 {
@@ -48,14 +50,23 @@ class Item extends \Illuminate\Database\Eloquent\Model
         return $this->values;
     }
 
-    public function value($key)
+    public function rawValue($key)
     {
-
         if ($key instanceof Attribute) {
             $key = $key->key();
         }
 
-        return data_get($this->values, $key);
+        $raw = data_get($this->values, $key);
+
+        return $raw;
+    }
+
+    public function value($key)
+    {
+        $raw = $this->rawValue($key);
+
+        return $this->entity()->attribute($key)->getValue($raw);
+
     }
 
     public function setValue($key, $value)
@@ -69,6 +80,10 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
     }
 
+    /**
+     * @return Entity
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     public function entity()
     {
         return app('nice_entity_service')->make($this->entity);
@@ -130,13 +145,71 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
         foreach ($data as $key => $value) {
 
-            $url = str_replace("{".$key."}", $value, $url);
+            $url = str_replace("{" . $key . "}", $value, $url);
 
         }
 
-        $this->fullUrl = config('app.url').$url;
+        $this->fullUrl = config('app.url') . $url;
 
         return $url;
+
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     */
+    protected static function getEntityKeyFromQueryWhere($query)
+    {
+
+        $baseQuery = $query->getQuery();
+
+        $entityWhere = Arr::first($baseQuery->wheres, function ($item) {
+
+            return data_get($item, 'column') === 'entity';
+        });
+
+        return data_get($entityWhere, 'value');
+
+    }
+
+    public function scopeGivenOrder($query)
+    {
+
+        $entity = app('nice_entity_service')->make(static::getEntityKeyFromQueryWhere($query));
+
+        if ($entity->isSortable()) {
+
+            return $query->orderBy('position', 'asc');
+
+        }
+
+        #
+
+        $key = $entity->param('editor.list_order.key');
+
+        $direction = $entity->param('editor.list_order.direction', 'asc');
+
+        if (!$key) {
+            return $query->orderBy('created_at', 'desc');
+        }
+
+        return $query->orderBy('values->' . $key, $direction);
+
+    }
+
+    public function scopeWhereValueOf($query, $key, $value)
+    {
+        return $query->where('values->' . $key, $value);
+    }
+
+    public function scopeWhereValuesOf($query, $data)
+    {
+
+        foreach ($data as $key => $value) {
+            $query->where('values->' . $key, $value);
+
+        }
 
     }
 }

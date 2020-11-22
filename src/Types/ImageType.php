@@ -9,7 +9,7 @@ use Nice\Core\Types\BaseType;
 
 class ImageType extends BaseType
 {
-    public function name()
+    public function key()
     {
         return 'image';
     }

@@ -2,6 +2,12 @@
 
 @section('breadcrumbs')
 
+    {{--    Если есть привязка к внешнему объекту - добавляем ссылку на него в крошки--}}
+    @if($externalValue)
+        <li class="breadcrumb-item">
+            <a href="{{$entity->externalAttribute()->getExternalUrl($externalValue)}}">{{$entity->externalAttribute()->getValue($externalValue)}}</a>
+        </li>
+    @endif
 
 
     @if($parent)
@@ -78,7 +84,7 @@
                         <div class="row">
                             <div class="col-12">
 
-                                {!! $attribute->input(old($attribute->key(), $item->value($attribute->key()))) !!}
+                                {!! $attribute->input(old($attribute->key(), $item->rawValue($attribute))) !!}
 
                             </div>
                         </div>

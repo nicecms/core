@@ -40,6 +40,28 @@ class Entity
         return $this->param('name');
     }
 
+    /**
+     * Проверка наличия внешнего атрибута - описания объекта вне CMS, привязываемого к экземпляру сущности.
+     * Например Shop, привязанный через external => shop_id к news
+     *
+     * @return bool
+     */
+    public function hasExternal()
+    {
+        return (bool)$this->param('external');
+    }
+
+    /**
+     * Ключ внешнего атрибута - описания объекта вне CMS, привязываемого к экземпляру сущности.
+     * Например Shop, привязанный через external => shop_id к news
+     *
+     * @return string|null
+     */
+    public function externalKey()
+    {
+        return $this->param('external');
+    }
+
     public function namePlural()
     {
         return $this->param('name_plural');
@@ -74,7 +96,7 @@ class Entity
 
         $schema = data_get($this->schema, 'attributes.' . $key, []);
 
-        if(!$schema){
+        if (!$schema) {
             return null;
         }
 
@@ -122,6 +144,17 @@ class Entity
 
         return app('nice_entity_service')->find($this->param('parent'));
 
+    }
+
+    /**
+     * Внешний атрибут - описание объекта вне CMS, привязываемого к экземпляру сущности.
+     * Например Shop, привязанный через external => shop_id к news
+     *
+     * @return Attribute|null
+     */
+    public function externalAttribute()
+    {
+        return $this->attribute($this->externalKey());
     }
 
 }

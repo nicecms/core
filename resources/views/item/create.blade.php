@@ -3,6 +3,13 @@
 @section('breadcrumbs')
 
 
+    {{--    Если есть привязка к внешнему объекту - добавляем ссылку на него в крошки--}}
+    @if($externalValue)
+        <li class="breadcrumb-item">
+            <a href="{{$entity->externalAttribute()->getExternalUrl($externalValue)}}">{{$entity->externalAttribute()->getValue($externalValue)}}</a>
+        </li>
+    @endif
+
 
     @if($parent)
         @foreach($parent->parentsChain()->reverse() as $pItem)
@@ -41,7 +48,6 @@
 
         {{$entity->param('name')}}: создание
 
-
     </div>
 
     <div class="h5 text-muted">
@@ -53,6 +59,9 @@
         @endif
 
 
+        @if($externalValue)
+            <div>{{$entity->externalAttribute()->name()}}: {{$entity->externalAttribute()->getValue($externalValue)}}</div>
+        @endif
 
     </div>
 
@@ -65,8 +74,6 @@
 
                 <div class="card-body">
 
-
-
                     <div class="row">
                         <div class="col-12">
                             <div class="form-group">
@@ -76,13 +83,12 @@
                         </div>
                     </div>
 
-
-                @foreach($entity->attributes() as $attribute)
+                    @foreach($entity->attributes() as $attribute)
 
                         <div class="row">
                             <div class="col-12">
 
-                                {!! $attribute->input(old($attribute->key())) !!}
+                                {!! $attribute->input(old($attribute->key(), ($attribute->key() === $entity->externalKey() ? $externalValue : null))) !!}
 
                             </div>
                         </div>
@@ -92,7 +98,7 @@
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary btn-lg" name="state" value="published">Опубликовать</button>
                         @if($entity->isMultiple())
-{{--                            <button type="submit" class="btn btn-outline-primary btn-lg" name="state" value="draft">Сохранить как черновик</button>--}}
+                            {{--                            <button type="submit" class="btn btn-outline-primary btn-lg" name="state" value="draft">Сохранить как черновик</button>--}}
                         @endif
                     </div>
                 </div>

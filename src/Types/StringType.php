@@ -6,7 +6,7 @@ use Nice\Core\Types\BaseType;
 
 class StringType extends BaseType
 {
-    public function name()
+    public function key()
     {
         return 'string';
     }

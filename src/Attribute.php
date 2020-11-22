@@ -3,6 +3,8 @@
 namespace Nice\Core;
 
 use Illuminate\Support\Str;
+use Nice\Core\Contracts\ExternalDataProvider;
+use Nice\Core\Types\BaseType;
 
 class Attribute
 {
@@ -41,6 +43,9 @@ class Attribute
         return data_get($this->schema, 'type', 'string');
     }
 
+    /**
+     * @return BaseType
+     */
     public function type()
     {
 
@@ -66,6 +71,53 @@ class Attribute
         $result = data_get($this->schema, $key, $default);
 
         return $result;
+    }
+
+    public function name()
+    {
+        return $this->param('name');
+    }
+
+    public function hasProvider()
+    {
+        return (bool)data_get($this->schema, 'provider');
+    }
+
+    /**
+     * @return ExternalDataProvider
+     * @throws \Exception
+     */
+
+    public function provider()
+    {
+
+        if (!$this->hasProvider()) {
+            throw new \Exception('Attribute ' . $this->key() . ' has no provider');
+        }
+
+        $class = data_get($this->schema, 'provider');
+
+        if (!app($class)) {
+            app()->singleton($class, function () use ($class) {
+                return new $class;
+            });
+        }
+
+        return app($class);
+    }
+
+    public function getValue($raw)
+    {
+        if ($this->hasProvider()) {
+            return $this->provider()->value($raw);
+        }
+
+        return $this->type()->prepareValue($raw, $this);
+    }
+
+    public function getExternalUrl($externalValue)
+    {
+        return str_replace('{value}', $externalValue, $this->param('external_url'));
     }
 
 }

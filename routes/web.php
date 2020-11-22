@@ -11,7 +11,7 @@ Route::prefix($prefix)->name($name)->middleware(config('nice.dashboard_middlewar
     Route::post("/item/update/{entity}/{id}", "Nice\\Core\\Controllers\\ItemController@update")->name("item.update");
     Route::get("/items/{entity}", "Nice\\Core\\Controllers\\ItemController@index")->name("item.index");
     Route::get("/item/destroy/{entity}/{id}", "Nice\\Core\\Controllers\\ItemController@destroy")->name("item.destroy");
-//    Route::post("/items/assign-positions", "Nice\\Core\\Controllers\\ItemController@assignPositions")->name("item.assign_positions");
+    Route::post("/items/assign-positions", "Nice\\Core\\Controllers\\ItemController@assignPositions")->name("item.assign_positions");
 
 });
 
