@@ -1,5 +1,10 @@
 @extends(config('nice.dashboard_layout'))
 
+
+@section('scripts')
+    @include('nice::common.scripts')
+@endsection
+
 @section('breadcrumbs')
 
 

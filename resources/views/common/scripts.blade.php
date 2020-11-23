@@ -1,0 +1,1 @@
+@include('nice::components.ckeditor')

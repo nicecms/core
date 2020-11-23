@@ -38,7 +38,8 @@ class NiceCoreServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'nice');
         $this->loadMigrationsFrom(__DIR__ . '/../migrations');
         $this->publishes([
-            __DIR__ . '/../config/nice.php' => config_path('nice.php')
+            __DIR__ . '/../config/nice.php' => config_path('nice.php'),
+            __DIR__ . '/../public/js/ckeditor/ckeditor.js' => public_path('/js/ckeditor/ckeditor.js')
         ]);
 
     }

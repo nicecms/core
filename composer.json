@@ -10,7 +10,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "mlsg/laravel-ckeditor-upload": "dev-main"
+    },
     "autoload": {
         "psr-4": {
             "Nice\\Core\\": "src/"
