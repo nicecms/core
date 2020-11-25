@@ -1,9 +1,6 @@
 <?php
 
-$prefix = config('nice.route_prefix');
-$name = config('nice.route_name');
-
-Route::prefix($prefix)->name($name)->middleware(config('nice.dashboard_middleware'))->group(function () {
+Route::prefix(config('nice.route_prefix'))->name(config('nice.route_name'))->middleware(config('nice.dashboard_middleware'))->group(function () {
 
     Route::get("/item/create/{entity}", "Nice\\Core\\Controllers\\ItemController@create")->name("item.create");
     Route::post("/item/store/{entity}", "Nice\\Core\\Controllers\\ItemController@store")->name("item.store");
