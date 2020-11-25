@@ -20,6 +20,9 @@
         }
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "0.x-dev"
+        },
         "laravel": {
             "providers": [
                 "Nice\\Core\\NiceCoreServiceProvider"
