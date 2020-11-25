@@ -38,7 +38,7 @@ class ItemController extends \Illuminate\Routing\Controller
     public function index(Request $request, $name)
     {
 
-        $entity = app('nice_entity_service')->make($name);
+        $entity = \Entities::make($name);
 
         /** @type Entity $entity */
 
@@ -52,7 +52,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
             $parentKey = $entity->param('parent');
 
-            $parentEntity = app('nice_entity_service')->make($parentKey);
+            $parentEntity = \Entities::make($parentKey);
 
             /** @type Entity $parentEntity */
 
@@ -90,7 +90,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
     public function create(Request $request, $name)
     {
-        $entity = app('nice_entity_service')->make($name);
+        $entity = \Entities::make($name);
 
         # передача обязательных значений
 
@@ -113,7 +113,7 @@ class ItemController extends \Illuminate\Routing\Controller
     public function store(Request $request, $name)
     {
 
-        $entity = app('nice_entity_service')->make($name);
+        $entity = \Entities::make($name);
 
         $item = $entity->makeItem();
 
