@@ -9,8 +9,29 @@ use Nice\Core\Item;
 class ItemController extends \Illuminate\Routing\Controller
 {
 
-    public function __construct()
+    public function __construct(Request $request)
     {
+
+    }
+
+    /**
+     * @param Request $request
+     * @param Entity $entity
+     * @param Item $items
+     * @return array
+     */
+    public function withAttributes(Request $request, $entity, $items = null)
+    {
+
+        $requestAttributes = $request->only($entity->attributesKeys());
+
+        if ($items) {
+            $items->whereValuesOf($requestAttributes);
+        }
+
+        view()->share('requestAttributes', $requestAttributes);
+
+        return $requestAttributes;
 
     }
 
@@ -23,28 +44,26 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $items = Item::query();
 
+        /** @type Item $items */
+
         $items->where('entity', $entity->key());
-
-        # передача внешнего параметра
-
-        if ($entity->hasExternal()) {
-            $externalValue = $request->input($entity->externalKey());
-
-            if($externalValue === null){
-                throw new \Exception('Undefined request external value for '.$entity->externalKey());
-            }
-
-            $items->whereValueOf($entity->externalKey(), $externalValue);
-
-        } else {
-            $externalValue = null;
-        }
-
-        #
 
         if ($request->input('parent_id')) {
 
-            $parent = Item::findOrFail($request->input('parent_id'));
+            $parentKey = $entity->param('parent');
+
+            $parentEntity = app('nice_entity_service')->make($parentKey);
+
+            /** @type Entity $parentEntity */
+
+            if ($parentEntity->isExternal()) {
+                $parent = $parentEntity->provider($request->input('parent_id'));
+
+            } else {
+                $parent = Item::findOrFail($request->input('parent_id'));
+
+            }
+
             $items->where('parent_id', $parent->id);
 
         } else {
@@ -53,11 +72,19 @@ class ItemController extends \Illuminate\Routing\Controller
 
         #
 
+        $requestAttributes = $this->withAttributes($request, $entity);
+
+        if ($requestAttributes) {
+            $items->whereValuesOf($requestAttributes);
+        }
+
+        #
+
         $items->givenOrder();
 
         $items = $items->get();
 
-        return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent, 'externalValue' => $externalValue]);
+        return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent]);
 
     }
 
@@ -67,21 +94,6 @@ class ItemController extends \Illuminate\Routing\Controller
 
         # передача обязательных значений
 
-        if ($entity->hasExternal()) {
-
-            $externalValue = $request->input($entity->externalKey());
-
-            if($externalValue === null){
-                throw new \Exception('Undefined request external value for '.$entity->externalKey());
-            }
-
-        } else {
-            $externalValue = null;
-        }
-
-
-        #
-
         if ($request->input('parent_id')) {
 
             $parent = Item::findOrFail($request->input('parent_id'));
@@ -90,7 +102,11 @@ class ItemController extends \Illuminate\Routing\Controller
             $parent = null;
         }
 
-        return view('nice::item.create', ['entity' => $entity, 'parent' => $parent, 'externalValue' => $externalValue]);
+        #
+
+        $requestAttributes = $this->withAttributes($request, $entity);
+
+        return view('nice::item.create', ['entity' => $entity, 'parent' => $parent]);
 
     }
 
@@ -127,7 +143,13 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $item->save();
 
-        return redirect()->to($item->editorIndexRoute());
+        #
+
+        $requestAttributes = json_decode($request->input('request_attributes', "[]"), true);
+
+
+
+        return redirect()->to($item->editorIndexRoute($requestAttributes));
 
     }
 
@@ -145,18 +167,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $entity = $item->entity();
 
-
-        # передача внешнего параметра
-
-        if ($entity->hasExternal()) {
-            $externalValue = $item->rawValue($entity->externalKey());
-
-        } else {
-            $externalValue = null;
-        }
-
-
-        return view('nice::item.edit', ['entity' => $entity, 'item' => $item, 'parent' => $parent, 'externalValue' => $externalValue]);
+        return view('nice::item.edit', ['entity' => $entity, 'item' => $item, 'parent' => $parent]);
     }
 
     public function update(Request $request, $name, $id)

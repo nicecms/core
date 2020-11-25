@@ -5,18 +5,20 @@ namespace Nice\Core;
 trait ItemRoutes
 {
 
-    public function editorIndexRoute()
+    public function editorIndexRoute($query = [])
     {
 
-        $query = [$this->entity];
+//        $query = [$this->entity];
+//
+//
+//
+//        if ($this->parent_id) {
+//            $query['parent_id'] = $this->parent_id;
+//        }
 
+        return $this->entity()->editorIndexRoute($this->parent, $query);
 
-
-        if ($this->parent_id) {
-            $query['parent_id'] = $this->parent_id;
-        }
-
-        return route(config('nice.route_name') . 'item.index', $query);
+//        return route(config('nice.route_name') . 'item.index', $query);
 
     }
 

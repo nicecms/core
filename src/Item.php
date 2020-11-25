@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 
+/**
+ * Class Item
+ * @package Nice\Core
+ * @method whereValuesOf($data)
+ */
 class Item extends \Illuminate\Database\Eloquent\Model
 {
     use ItemRoutes;

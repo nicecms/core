@@ -2,14 +2,15 @@
 
 namespace Nice\Core\Contracts;
 
-interface ExternalDataProvider
+interface ExternalValueProvider
 {
 
     /**
-     * @param $name
+     * id => name array
+     *
      * @return array
      */
-    public function options($name);
+    public function all();
 
     public function value($id);
 

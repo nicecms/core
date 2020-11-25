@@ -8,11 +8,11 @@ trait EntityRoutes
     public function editorIndexRoute($parent = null, $query = [])
     {
 
-        $query = [$this->key()] + $query;
-
         if ($parent) {
             $query['parent_id'] = $parent->id;
         }
+
+        $query = [$this->key()] + $query;
 
         return route(config('nice.route_name') . 'item.index', $query);
 
@@ -21,11 +21,11 @@ trait EntityRoutes
     public function editorCreateRoute($parent = null, $query = [])
     {
 
-        $query = [$this->key()] + $query;
-
         if ($parent) {
             $query['parent_id'] = $parent->id;
         }
+
+        $query = [$this->key()] + $query;
 
         return route(config('nice.route_name') . 'item.create', $query);
 

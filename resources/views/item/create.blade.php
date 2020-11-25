@@ -8,14 +8,6 @@
 @section('breadcrumbs')
 
 
-    {{--    Если есть привязка к внешнему объекту - добавляем ссылку на него в крошки--}}
-    @if($externalValue)
-        <li class="breadcrumb-item">
-            <a href="{{$entity->externalAttribute()->getExternalUrl($externalValue)}}">{{$entity->externalAttribute()->getValue($externalValue)}}</a>
-        </li>
-    @endif
-
-
     @if($parent)
         @foreach($parent->parentsChain()->reverse() as $pItem)
 
@@ -40,7 +32,7 @@
 
     {!! Form::open(['files' => true, 'url' => $entity->editorStoreRoute(), 'method' => 'POST' ]) !!}
 
-
+    {{Form::hidden('request_attributes', json_encode($requestAttributes))}}
 
     @if($parent)
 
@@ -59,14 +51,17 @@
 
         @if($parent)
 
-            {{$parent->entity()->name()}} - {{$parent->title()}}
-
+            <div>{{$parent->entity()->name()}} - {{$parent->title()}}</div>
         @endif
 
 
-        @if($externalValue)
-            <div>{{$entity->externalAttribute()->name()}}: {{$entity->externalAttribute()->getValue($externalValue)}}</div>
-        @endif
+        @foreach($requestAttributes as $key => $value)
+
+            <div>
+                {{$entity->attribute($key)->name()}}: {{$entity->attribute($key)->getValue($value)}}
+            </div>
+
+        @endforeach
 
     </div>
 
@@ -90,10 +85,15 @@
 
                     @foreach($entity->attributes() as $attribute)
 
+                        @if(data_get($requestAttributes, $attribute->key()))
+                            {{Form::hidden($attribute->key(), data_get($requestAttributes, $attribute->key()))}}
+                            @continue
+                        @endif
+
                         <div class="row">
                             <div class="col-12">
 
-                                {!! $attribute->input(old($attribute->key(), ($attribute->key() === $entity->externalKey() ? $externalValue : null))) !!}
+                                {!! $attribute->input(old($attribute->key())) !!}
 
                             </div>
                         </div>

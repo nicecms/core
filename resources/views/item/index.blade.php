@@ -3,13 +3,6 @@
 @section('breadcrumbs')
 
 
-    {{--    Если есть привязка к внешнему объекту - добавляем ссылку на него в крошки--}}
-    @if($externalValue)
-        <li class="breadcrumb-item">
-            <a href="{{$entity->externalAttribute()->getExternalUrl($externalValue)}}">{{$entity->externalAttribute()->getValue($externalValue)}}</a>
-        </li>
-    @endif
-
     {{-- Ссылки по цепочке родителей --}}
 
     @if($parent)
@@ -23,10 +16,11 @@
     @endif
 
     <li class="breadcrumb-item">
-        <a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
+        <a href="{{$entity->editorIndexRoute($parent, $requestAttributes)}}">{{$entity->param('name_plural')}}</a>
     </li>
 
     <li class="breadcrumb-item active">Список</li>
+
 
 @endsection
 
@@ -45,21 +39,25 @@
 
         @if($parent)
 
-            {{$parent->entity()->name()}} - {{$parent->title()}}
+            <div>{{$parent->entity()->name()}} - {{$parent->title()}}</div>
 
         @endif
 
 
-        @if($externalValue)
-            <div>{{$entity->externalAttribute()->name()}}: {{$entity->externalAttribute()->getValue($externalValue)}}</div>
-        @endif
+        @foreach($requestAttributes as $key => $value)
+
+            <div>
+                {{$entity->attribute($key)->name()}}: {{$entity->attribute($key)->getValue($value)}}
+            </div>
+
+        @endforeach
 
     </div>
 
 
 
     <div class=" mb-3 mt-3">
-        <a href="{{$entity->editorCreateRoute($parent, ($externalValue ? [$entity->externalKey() => $externalValue] : []))}}" class="btn btn-success">Добавить</a>
+        <a href="{{$entity->editorCreateRoute($parent, $requestAttributes)}}" class="btn btn-success">Добавить</a>
     </div>
 
     {{--/верх--}}

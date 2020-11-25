@@ -4,6 +4,8 @@ namespace Nice\Core;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Nice\Core\Contracts\ExternalItemProvider;
+use Nice\Core\Contracts\ExternalValueProvider;
 
 class Entity
 {
@@ -41,26 +43,15 @@ class Entity
     }
 
     /**
-     * Проверка наличия внешнего атрибута - описания объекта вне CMS, привязываемого к экземпляру сущности.
-     * Например Shop, привязанный через external => shop_id к news
-     *
      * @return bool
      */
-    public function hasExternal()
+    public function isExternal()
     {
         return (bool)$this->param('external');
     }
 
-    /**
-     * Ключ внешнего атрибута - описания объекта вне CMS, привязываемого к экземпляру сущности.
-     * Например Shop, привязанный через external => shop_id к news
-     *
-     * @return string|null
-     */
-    public function externalKey()
-    {
-        return $this->param('external');
-    }
+
+
 
     public function namePlural()
     {
@@ -70,6 +61,7 @@ class Entity
     /**
      *
      *
+     * @param array $only
      * @return Collection
      */
 
@@ -89,6 +81,13 @@ class Entity
 
         return $attributes;
 
+    }
+
+    /**
+     * @return array
+     */
+    public function attributesKeys(){
+        return array_keys(data_get($this->schema, 'attributes', []));
     }
 
     public function attribute($key)
@@ -156,5 +155,29 @@ class Entity
     {
         return $this->attribute($this->externalKey());
     }
+
+
+    /**
+     * @return ExternalItemProvider
+     * @throws \Exception
+     */
+    public function provider()
+    {
+
+        if (!$this->hasProvider()) {
+            throw new \Exception('Attribute ' . $this->key() . ' has no provider');
+        }
+
+        $class = data_get($this->schema, 'provider');
+
+        if (!app($class)) {
+            app()->singleton($class, function () use ($class) {
+                return new $class;
+            });
+        }
+
+        return app($class);
+    }
+
 
 }

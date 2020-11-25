@@ -4,6 +4,7 @@ namespace Nice\Core;
 
 use Illuminate\Support\Str;
 use Nice\Core\Contracts\ExternalDataProvider;
+use Nice\Core\Contracts\ExternalValueProvider;
 use Nice\Core\Types\BaseType;
 
 class Attribute
@@ -84,10 +85,9 @@ class Attribute
     }
 
     /**
-     * @return ExternalDataProvider
+     * @return ExternalValueProvider
      * @throws \Exception
      */
-
     public function provider()
     {
 
@@ -115,9 +115,5 @@ class Attribute
         return $this->type()->prepareValue($raw, $this);
     }
 
-    public function getExternalUrl($externalValue)
-    {
-        return str_replace('{value}', $externalValue, $this->param('external_url'));
-    }
 
 }

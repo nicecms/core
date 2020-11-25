@@ -1,14 +1,10 @@
 @extends(config('nice.dashboard_layout'))
 
+@section('scripts')
+    @include('nice::common.scripts')
+@endsection
+
 @section('breadcrumbs')
-
-    {{--    Если есть привязка к внешнему объекту - добавляем ссылку на него в крошки--}}
-    @if($externalValue)
-        <li class="breadcrumb-item">
-            <a href="{{$entity->externalAttribute()->getExternalUrl($externalValue)}}">{{$entity->externalAttribute()->getValue($externalValue)}}</a>
-        </li>
-    @endif
-
 
     @if($parent)
         @foreach($parent->parentsChain()->reverse() as $pItem)
@@ -36,7 +32,7 @@
 
     {!! Form::open(['files' => true, 'route' => [ config('nice.route_name').'item.update', $entity->key(), $item->id], 'method' => 'POST' ]) !!}
 
-    <h3 >{{$item->value($entity->param('title'))}}</h3>
+    <h3>{{$item->value($entity->param('title'))}}</h3>
 
 
     <div class="h5 text-muted">
@@ -46,8 +42,6 @@
             {{$parent->entity()->name()}} - {{$parent->title()}}
 
         @endif
-
-
 
     </div>
 
@@ -75,7 +69,6 @@
                                 </div>
                             </div>
 
-
                         </div>
                     </div>
 
@@ -94,7 +87,7 @@
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary btn-lg" name="state" value="published">Сохранить</button>
                         @if($entity->isMultiple())
-{{--                            <button type="submit" class="btn btn-outline-primary btn-lg" name="state" value="draft">Сохранить как черновик</button>--}}
+                            {{--                            <button type="submit" class="btn btn-outline-primary btn-lg" name="state" value="draft">Сохранить как черновик</button>--}}
                         @endif
                     </div>
                 </div>

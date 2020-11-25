@@ -1,6 +1,7 @@
 <script src="/js/ckeditor/ckeditor.js"></script>
 <script>ClassicEditor
         .create( document.querySelector( '.editor' ), {
+
             simpleUpload: {
                 // The URL that the images are uploaded to.
                 uploadUrl: '{{config('ckeditor-upload.upload_url')}}',
@@ -15,31 +16,31 @@
             },
             toolbar: {
                 items: [
-                    '|',
                     'heading',
-                    'link',
+                    '|',
+                    'fontSize',
+                    'fontColor',
+                    '|',
                     'bold',
                     'italic',
                     'underline',
-                    'fontColor',
-                    'fontSize',
+                    'link',
+                    'bulletedList',
+                    'numberedList',
                     '|',
                     'indent',
                     'outdent',
-                    'alignment',
                     '|',
-                    'bulletedList',
-                    'numberedList',
-                    'imageUpload',
+                    'imageInsert',
                     'blockQuote',
                     'insertTable',
                     'mediaEmbed',
-                    'undo',
-                    'redo',
-                    '|',
                     'htmlEmbed',
                     '|',
-                    'removeFormat'
+                    'removeFormat',
+                    '|',
+                    'undo',
+                    'redo'
                 ]
             },
             language: 'en',
@@ -55,7 +56,9 @@
                 contentToolbar: [
                     'tableColumn',
                     'tableRow',
-                    'mergeTableCells'
+                    'mergeTableCells',
+                    'tableCellProperties',
+                    'tableProperties'
                 ]
             },
             licenseKey: '',
@@ -64,18 +67,9 @@
         .then( editor => {
             window.editor = editor;
 
-
-
-
-
-
-
-
         } )
         .catch( error => {
-            console.error( 'Oops, something went wrong!' );
-            console.error( 'Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:' );
-            console.warn( 'Build id: qtijbk8aztub-us2aenlmwq1w' );
             console.error( error );
         } );
 </script>
+
