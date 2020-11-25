@@ -4,6 +4,7 @@ namespace Nice\Core\Controllers;
 
 use Illuminate\Http\Request;
 use Nice\Core\Entity;
+use Nice\Core\Facades\Entities;
 use Nice\Core\Item;
 
 class ItemController extends \Illuminate\Routing\Controller
@@ -38,7 +39,7 @@ class ItemController extends \Illuminate\Routing\Controller
     public function index(Request $request, $name)
     {
 
-        $entity = \Entities::make($name);
+        $entity = Entities::make($name);
 
         /** @type Entity $entity */
 
@@ -52,7 +53,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
             $parentKey = $entity->param('parent');
 
-            $parentEntity = \Entities::make($parentKey);
+            $parentEntity = Entities::make($parentKey);
 
             /** @type Entity $parentEntity */
 
@@ -90,7 +91,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
     public function create(Request $request, $name)
     {
-        $entity = \Entities::make($name);
+        $entity = Entities::make($name);
 
         # передача обязательных значений
 
@@ -113,7 +114,7 @@ class ItemController extends \Illuminate\Routing\Controller
     public function store(Request $request, $name)
     {
 
-        $entity = \Entities::make($name);
+        $entity = Entities::make($name);
 
         $item = $entity->makeItem();
 
