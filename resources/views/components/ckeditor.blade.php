@@ -18,8 +18,9 @@
                 items: [
                     'heading',
                     '|',
-                    'fontSize',
+                    'fontBackgroundColor',
                     'fontColor',
+                    'fontSize',
                     '|',
                     'bold',
                     'italic',
@@ -27,11 +28,14 @@
                     'link',
                     'bulletedList',
                     'numberedList',
+                    'subscript',
+                    'superscript',
                     '|',
+                    'alignment',
                     'indent',
                     'outdent',
                     '|',
-                    'imageInsert',
+                    'imageUpload',
                     'blockQuote',
                     'insertTable',
                     'mediaEmbed',
@@ -43,7 +47,7 @@
                     'redo'
                 ]
             },
-            language: 'en',
+            language: 'ru',
             image: {
                 toolbar: [
                     'imageTextAlternative',
