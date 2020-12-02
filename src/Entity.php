@@ -50,8 +50,13 @@ class Entity
         return (bool)$this->param('external');
     }
 
-
-
+    /**
+     * @return bool
+     */
+    public function hasUrl()
+    {
+        return (bool)$this->param('url');
+    }
 
     public function namePlural()
     {
@@ -86,7 +91,8 @@ class Entity
     /**
      * @return array
      */
-    public function attributesKeys(){
+    public function attributesKeys()
+    {
         return array_keys(data_get($this->schema, 'attributes', []));
     }
 
@@ -156,7 +162,6 @@ class Entity
         return $this->attribute($this->externalKey());
     }
 
-
     /**
      * @return ExternalItemProvider
      * @throws \Exception
@@ -178,6 +183,5 @@ class Entity
 
         return app($class);
     }
-
 
 }

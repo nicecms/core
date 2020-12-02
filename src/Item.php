@@ -5,6 +5,7 @@ namespace Nice\Core;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
+use Stringy\StaticStringy;
 
 /**
  * Class Item
@@ -70,6 +71,8 @@ class Item extends \Illuminate\Database\Eloquent\Model
     {
         $raw = $this->rawValue($key);
 
+
+
         return $this->entity()->attribute($key)->getValue($raw);
 
     }
@@ -131,6 +134,11 @@ class Item extends \Illuminate\Database\Eloquent\Model
     public function title()
     {
         return $this->value($this->entity()->param('title'));
+    }
+
+    public function makeSlug()
+    {
+        return StaticStringy::slugify($this->value($this->entity()->param('title')));
     }
 
     public function fullUrl()

@@ -5,6 +5,8 @@ namespace Nice\Core\Types;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Nice\Core\Attribute;
+use Nice\Core\Item;
 use Nice\Core\Types\BaseType;
 
 class ImageType extends BaseType
@@ -16,8 +18,8 @@ class ImageType extends BaseType
 
     /**
      * @param UploadedFile $data
-     * @param null $attibute
-     * @param null $item
+     * @param Attribute|null $attibute
+     * @param Item|null $item
      * @return string|void
      */
     public function storable($data, $attibute = null, $item = null)
@@ -35,7 +37,13 @@ class ImageType extends BaseType
 
         $ext = $data->extension();
 
-        $name = $item->url . "." . $ext;
+        if ($item->entity()->hasUrl()) {
+            $name = $item->url . "." . $ext;
+
+        } else {
+            $name = $item->makeSlug() . "." . $ext;
+
+        }
 
         $path = Storage::disk($disk)->putFileAs($directory, $file, $name);
 
@@ -45,8 +53,8 @@ class ImageType extends BaseType
 
     }
 
-
-    public function isInputFile(){
+    public function isInputFile()
+    {
         return true;
     }
 
