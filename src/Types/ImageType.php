@@ -5,6 +5,7 @@ namespace Nice\Core\Types;
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Nice\Core\Attribute;
 use Nice\Core\Item;
 use Nice\Core\Types\BaseType;
@@ -38,14 +39,18 @@ class ImageType extends BaseType
         $ext = $data->extension();
 
         if ($item->entity()->hasUrl()) {
-            $name = $item->url . "." . $ext;
+            $name = $item->url;
 
         } else {
-            $name = $item->makeSlug() . "." . $ext;
+            $name = $item->makeSlug();
 
         }
 
-        $name = $attibute->param('prefix', '').$name;
+        $name = $attibute->param('prefix', '') . $name;
+
+        $name = $name . substr(md5(Str::random()), 0, 6);
+
+        $name = $name . "." . $ext;
 
         $path = Storage::disk($disk)->putFileAs($directory, $file, $name);
 
