@@ -48,7 +48,7 @@ class ImageType extends BaseType
 
         $name = $attibute->param('prefix', '') . $name;
 
-        $name = $name . substr(md5(Str::random()), 0, 6);
+        $name = $name . "-". substr(md5(Str::random()), 0, 6);
 
         $name = $name . "." . $ext;
 
