@@ -74,14 +74,17 @@
 
                 <div class="card-body">
 
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-                                {!! Form::label('url', 'URL') !!}
-                                {!! Form::text('url', old('url', ''), ['class' => 'form-control', 'placeholder' => 'URL']) !!}
+                    @if($entity->hasUrl())
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    {!! Form::label('url', 'URL') !!}
+                                    {!! Form::text('url', old('url', ''), ['class' => 'form-control', 'placeholder' => 'URL']) !!}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
                     @foreach($entity->attributes() as $attribute)
 

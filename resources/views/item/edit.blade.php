@@ -45,9 +45,12 @@
 
     </div>
 
+    @if($entity->hasUrl())
+
     <div class="mb-3">
         Ссылка: <a href="{{$item->fullUrl()}}">{{$item->fullUrl()}}</a>
     </div>
+    @endif
 
     <div class="row">
 
