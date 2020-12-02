@@ -45,6 +45,8 @@ class ImageType extends BaseType
 
         }
 
+        $name = $attibute->param('prefix', '').$name;
+
         $path = Storage::disk($disk)->putFileAs($directory, $file, $name);
 
         $url = Storage::disk($disk)->url($path);
