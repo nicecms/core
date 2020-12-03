@@ -42,6 +42,16 @@ class Entity
         return $this->param('name');
     }
 
+    public function isTitle($attribute)
+    {
+        if ($attribute instanceof Attribute) {
+            $attribute = $attribute->key();
+        }
+
+        return $attribute === $this->param('title');
+
+    }
+
     /**
      * @return bool
      */

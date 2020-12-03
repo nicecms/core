@@ -86,7 +86,7 @@
 
             @foreach($entity->param('editor.list_attributes', []) as  $attribute)
                 <td>
-                    {{$item->value($attribute)}}
+                    {{$item->showValue($attribute)}}
                 </td>
 
             @endforeach

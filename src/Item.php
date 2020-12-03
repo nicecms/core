@@ -77,6 +77,15 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
     }
 
+    public function showValue($key){
+        $raw = $this->rawValue($key);
+
+
+        return $this->entity()->attribute($key)->showValue($raw);
+
+
+    }
+
     public function setValue($key, $value)
     {
 

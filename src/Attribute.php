@@ -3,6 +3,7 @@
 namespace Nice\Core;
 
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 use Nice\Core\Contracts\ExternalDataProvider;
 use Nice\Core\Contracts\ExternalValueProvider;
 use Nice\Core\Types\BaseType;
@@ -113,6 +114,26 @@ class Attribute
         }
 
         return $this->type()->prepareValue($raw, $this);
+    }
+
+    public function showValue($raw)
+    {
+        if ($this->hasProvider()) {
+            $value = $this->provider()->value($raw);
+        }
+        else{
+            $value = $this->type()->prepareValue($raw, $this);
+        }
+
+        if(\View::exists("nice::types." . $this->typeKey() . ".show")){
+
+            return view("nice::types." . $this->typeKey() . ".show", ['attribute' => $this, 'value' => $value]);
+
+        }
+        else{
+            return $value;
+        }
+
     }
 
 

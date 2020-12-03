@@ -62,7 +62,7 @@
 
     {{--/верх--}}
 
-    @include('nice::item.list.table')
+    @include('nice::item.list.'.$entity->param('editor.list_view', 'table'))
 
 @endsection
 

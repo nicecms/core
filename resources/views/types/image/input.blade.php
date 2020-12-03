@@ -1,10 +1,8 @@
-@if($value)
-    <div class="row">
-        <div class="col-12">
-            <img src="{{$value}}" class="img-thumbnail" alt="">
-        </div>
+<div class="row">
+    <div class="col-12">
+        {!! $attribute->showValue($value) !!}
     </div>
-@endif
+</div>
 
 <div class="row">
     <div class="col-12">
