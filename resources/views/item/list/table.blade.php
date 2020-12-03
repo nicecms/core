@@ -186,7 +186,7 @@
 
                         })
 
-                        $.post('{{route(config('nice.route_name').'item.assign_positions')}}', {entity_ids: ids}, function (data) {
+                        $.post('{{route(config('nice.route_name').'item.assign_positions')}}', {items: ids}, function (data) {
 
                             //
 

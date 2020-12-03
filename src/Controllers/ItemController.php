@@ -217,7 +217,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
     public function assignPositions(Request $request)
     {
-        foreach ($request->entity_ids as $position => $id) {
+        foreach ($request->items as $position => $id) {
             Item::where('id', $id)->update(['position' => $position]);
         }
 

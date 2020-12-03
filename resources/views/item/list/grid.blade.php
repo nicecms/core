@@ -3,7 +3,7 @@
     @foreach($items as $item)
 
 
-        <div data-entity-id="{{$entity->id}}" class="{{$entity->param('editor.grid_block_class', 'col-2')}} mb-3">
+        <div data-item-id="{{$item->id}}" class="{{$entity->param('editor.grid_block_class', 'col-2')}} mb-3">
             <div class="card w-100">
 
                 <div class="card-body">
@@ -112,7 +112,7 @@
 
                         })
 
-                        $.post('{{route(config('nice.route_name').'item.assign_positions')}}', {entity_ids: ids}, function (data) {
+                        $.post('{{route(config('nice.route_name').'item.assign_positions')}}', {items: ids}, function (data) {
 
                             //
 
