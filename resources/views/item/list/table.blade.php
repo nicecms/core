@@ -1,4 +1,8 @@
-
+@if($entity->isSortable())
+    <div class="row">
+        <div class="col text-muted mb-3">меняйте порядок элементов, взяв за три точки и перетаскивая строки таблицы </div>
+    </div>
+@endif
 
 <table class="table {{$entity->isSortable() ?: 'table-striped' }} table-bordered items">
 

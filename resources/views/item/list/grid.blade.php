@@ -1,10 +1,15 @@
+@if($entity->isSortable())
+    <div class="row">
+        <div class="col text-muted mb-3">меняйте порядок элементов, перетаскивая карточки за нижнюю серую часть</div>
+    </div>
+@endif
 <div class="row items">
 
     @foreach($items as $item)
 
 
         <div data-item-id="{{$item->id}}" class="{{$entity->param('editor.grid_block_class', 'col-2')}} mb-3">
-            <div class="card w-100">
+            <div class="card w-100 {{$entity->isSortable() ? 'sortable' : ''}}">
 
                 <div class="card-body">
 
@@ -47,12 +52,6 @@
                     <a href="{{$item->editorEditRoute()}}" class="btn btn-sm btn-primary mr-2">редактировать</a>
                     <a href="{{$item->editorDestroyRoute()}}" class="btn btn-sm btn-danger">удалить</a>
 
-                    @if($entity->isSortable())
-
-                        <svg class="ml-auto lever bi bi-three-dots-vertical" width="24" height="24" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M9.5 13a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0-5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0-5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" clip-rule="evenodd"/>
-                        </svg>
-                    @endif
 
                 </div>
             </div>
@@ -78,13 +77,16 @@
 
 
         .placeholder {
-
-            border: 1px dotted #ccc;
-
+            border: 1px dotted rgba(0,0,0,.125);
+            border-radius: .25rem;
         }
 
-        .highlight {
+        .highlight .card {
             box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .items > div > .card{
+            height: 100%;
         }
     </style>
 
@@ -93,9 +95,25 @@
     <script type="text/javascript">
         $(function () {
 
+
+            var itemHeight = 0
+
+
+            $('.items').each(function(){
+
+                var cHeight = $(this).height();
+
+                if(cHeight > itemHeight){
+                    itemHeight = cHeight
+                }
+
+            })
+
+            $('.items > div').css('height', itemHeight)
+
             $('.items').sortable(
                 {
-                    handle: '.lever',
+                    handle: '.sortable',
                     placeholder: 'placeholder',
                     revert: 200,
                     forcePlaceholderSize: true,
