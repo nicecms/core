@@ -9,7 +9,7 @@
 
 
         <div data-item-id="{{$item->id}}" class="{{$entity->param('editor.grid_block_class', 'col-2')}} mb-3">
-            <div class="card w-100 {{$entity->isSortable() ? 'sortable' : ''}}">
+            <div class="card w-100 ">
 
                 <div class="card-body">
 
@@ -47,7 +47,7 @@
 
                 </div>
 
-                <div class="card-footer d-flex">
+                <div class="card-footer d-flex {{$entity->isSortable() ? 'sortable' : ''}}">
 
                     <a href="{{$item->editorEditRoute()}}" class="btn btn-sm btn-primary mr-2">редактировать</a>
                     <a href="{{$item->editorDestroyRoute()}}" class="btn btn-sm btn-danger">удалить</a>
