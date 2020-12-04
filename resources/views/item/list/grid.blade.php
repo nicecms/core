@@ -103,11 +103,16 @@
 
                 var cHeight = $(this).height();
 
+                console.log(cHeight)
+
+
                 if(cHeight > itemHeight){
                     itemHeight = cHeight
                 }
 
             })
+
+            console.log(itemHeight+'!')
 
             $('.items > div').css('height', itemHeight)
 
