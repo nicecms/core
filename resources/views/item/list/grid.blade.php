@@ -95,16 +95,13 @@
     <script type="text/javascript">
         $(function () {
 
-
             var itemHeight = 0
 
-
-            $('.items').each(function(){
+            $('.items > div').each(function(){
 
                 var cHeight = $(this).height();
 
                 console.log(cHeight)
-
 
                 if(cHeight > itemHeight){
                     itemHeight = cHeight
