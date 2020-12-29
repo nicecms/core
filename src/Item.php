@@ -228,8 +228,8 @@ class Item extends Model
 
     }
 
-    public function childSingleItem($key)
+    public function childSingleItem($entity)
     {
-        return $this->children()->where('entity', $key)->first();
+        return $this->children($entity)->first();
     }
 }
