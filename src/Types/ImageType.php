@@ -19,11 +19,11 @@ class ImageType extends BaseType
 
     /**
      * @param UploadedFile $data
-     * @param Attribute|null $$attribute
+     * @param Attribute|null $attribute
      * @param Item|null $item
      * @return string|void
      */
-    public function storable($data, $$attribute  = null, $item = null)
+    public function storable($data, $attribute  = null, $item = null)
     {
 
         if (!$data) {
@@ -32,9 +32,9 @@ class ImageType extends BaseType
 
         $file = $data;
 
-        $disk = $$attribute ->param('disk', config('nice.storage_disk'));
+        $disk = $attribute ->param('disk', config('nice.storage_disk'));
 
-        $directory = $$attribute ->param('directory', config('nice.storage_directory'));
+        $directory = $attribute ->param('directory', config('nice.storage_directory'));
 
         $ext = $data->extension();
 
@@ -46,7 +46,7 @@ class ImageType extends BaseType
 
         }
 
-        $name = $$attribute ->param('prefix', '') . $name;
+        $name = $attribute ->param('prefix', '') . $name;
 
         $name = $name . "-". substr(md5(Str::random()), 0, 6);
 
