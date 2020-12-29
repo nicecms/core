@@ -63,9 +63,13 @@ class Item extends Model
         return $raw;
     }
 
-    public function value($key)
+    public function value($key, $default = null)
     {
         $raw = $this->rawValue($key);
+
+        if (!$raw) {
+            $raw = $default;
+        }
 
         return $this->entity()->attribute($key)->getValue($raw);
 
