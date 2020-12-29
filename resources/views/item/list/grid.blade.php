@@ -26,7 +26,11 @@
                         @foreach($entity->children() as $childEntity)
 
                             <p>
-                                <a href="{{$childEntity->editorIndexRoute($item)}}">{{$childEntity->param('name_plural')}} ({{$item->children($childEntity)->count()}})</a>
+                                <a href="{{$childEntity->editorIndexRoute($item)}}">{{$childEntity->param('name_plural')}}
+                                    @if($childEntity->isMultiple())
+                                        ({{$item->children($childEntity)->count()}})
+                                    @endif
+                                </a>
                             </p>
 
                         @endforeach
@@ -52,7 +56,6 @@
                     <a href="{{$item->editorEditRoute()}}" class="btn btn-sm btn-primary mr-2">редактировать</a>
                     <a href="{{$item->editorDestroyRoute()}}" class="btn btn-sm btn-danger">удалить</a>
 
-
                 </div>
             </div>
 
@@ -77,7 +80,7 @@
 
 
         .placeholder {
-            border: 1px dotted rgba(0,0,0,.125);
+            border: 1px dotted rgba(0, 0, 0, .125);
             border-radius: .25rem;
         }
 
@@ -85,7 +88,7 @@
             box-shadow: 0px 2px 20px -5px rgba(0, 0, 0, 0.5);
         }
 
-        .items > div > .card{
+        .items > div > .card {
             height: 100%;
         }
     </style>
@@ -97,12 +100,12 @@
 
             var itemHeight = 0
 
-            $('.items > div').each(function(){
+            $('.items > div').each(function () {
 
                 var cHeight = $(this).height();
 
 
-                if(cHeight > itemHeight){
+                if (cHeight > itemHeight) {
                     itemHeight = cHeight
                 }
 

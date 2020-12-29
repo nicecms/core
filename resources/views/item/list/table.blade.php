@@ -1,6 +1,6 @@
 @if($entity->isSortable())
     <div class="row">
-        <div class="col text-muted mb-3">меняйте порядок элементов, взяв за три точки и перетаскивая строки таблицы </div>
+        <div class="col text-muted mb-3">меняйте порядок элементов, взяв за три точки и перетаскивая строки таблицы</div>
     </div>
 @endif
 
@@ -46,15 +46,11 @@
 
         @endif
 
-
-
-
-
         <th>Состояние</th>
 
-            @if($entity->param('editor.with_url'))
-                <th>Ссылка</th>
-            @endif
+        @if($entity->param('editor.with_url'))
+            <th>Ссылка</th>
+        @endif
 
         <th>
             Действия
@@ -103,7 +99,12 @@
                     @foreach($entity->children() as $childEntity)
 
                         <div>
-                            <a href="{{$childEntity->editorIndexRoute($item)}}">{{$childEntity->param('name_plural')}} ({{$item->children($childEntity)->count()}})</a>
+                            <a href="{{$childEntity->editorIndexRoute($item)}}">
+                                {{$childEntity->namePlural()}}
+                                @if($childEntity->isMultiple())
+                                    ({{$item->children($childEntity)->count()}})
+                                @endif
+                            </a>
                         </div>
 
                     @endforeach
@@ -111,22 +112,19 @@
 
             @endif
 
-
-
             <td>
                 {{$item->state === 'draft' ? 'черновик' : 'опубликовано'}}
             </td>
 
-                @if($entity->param('editor.with_url'))
-                    <td>
+            @if($entity->param('editor.with_url'))
+                <td>
 
-                        <a href="{{$item->fullUrl()}}" target="_blank">{{$item->fullUrl()}}</a>
+                    <a href="{{$item->fullUrl()}}" target="_blank">{{$item->fullUrl()}}</a>
 
-                    </td>
-                @endif
+                </td>
+            @endif
 
             <td style="font-style: normal; min-width: 212px">
-
 
                 <a href="{{$item->editorEditRoute()}}" class="btn btn-sm btn-primary">редактировать</a>
                 <a href="{{$item->editorDestroyRoute()}}" class="btn btn-sm btn-danger">удалить</a>

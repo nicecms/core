@@ -12,6 +12,19 @@ trait EntityRoutes
             $query['parent_id'] = $parent->id;
         }
 
+        if (!$this->isMultiple()) {
+
+            $item = $this->singleItem($parent);
+
+            if ($item) {
+                return $item->editorEditRoute();
+            } else {
+                return $this->editorCreateRoute($parent, $query);
+
+            }
+
+        }
+
         $query = [$this->key()] + $query;
 
         return route(config('nice.route_name') . 'item.index', $query);

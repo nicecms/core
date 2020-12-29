@@ -71,6 +71,22 @@ class ItemController extends \Illuminate\Routing\Controller
             $parent = null;
         }
 
+        # если не множественное - редиректим на создание или редактирование
+
+        if (!$entity->isMultiple()) {
+
+            $item = $items->first();
+
+            if (!$item) {
+                return redirect()->route($entity->editorCreateRoute($parent));
+            } else {
+
+                return redirect()->route($item->editorEditRoute());
+
+            }
+
+        }
+
         #
 
         $requestAttributes = $this->withAttributes($request, $entity);
@@ -147,8 +163,6 @@ class ItemController extends \Illuminate\Routing\Controller
         #
 
         $requestAttributes = json_decode($request->input('request_attributes', "[]"), true);
-
-
 
         return redirect()->to($item->editorIndexRoute($requestAttributes));
 

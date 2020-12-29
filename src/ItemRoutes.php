@@ -16,6 +16,12 @@ trait ItemRoutes
 //            $query['parent_id'] = $this->parent_id;
 //        }
 
+        if (!$this->entity()->isMultiple()) {
+
+            return $this->editorEditRoute();
+
+        }
+
         return $this->entity()->editorIndexRoute($this->parent, $query);
 
 //        return route(config('nice.route_name') . 'item.index', $query);
@@ -30,7 +36,6 @@ trait ItemRoutes
         return route(config('nice.route_name') . 'item.edit', $query);
 
     }
-
 
     public function editorDestroyRoute()
     {

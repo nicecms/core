@@ -3,6 +3,7 @@
 namespace Nice\Core;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Stringy\StaticStringy;
@@ -12,7 +13,7 @@ use Stringy\StaticStringy;
  * @package Nice\Core
  * @method whereValuesOf($data)
  */
-class Item extends \Illuminate\Database\Eloquent\Model
+class Item extends Model
 {
     use ItemRoutes;
 
@@ -41,11 +42,6 @@ class Item extends \Illuminate\Database\Eloquent\Model
      */
     protected $fullUrl = null;
 
-    public function childs()
-    {
-        return $this->hasMany(Item::class, 'parent_id');
-    }
-
     public function parent()
     {
         return $this->belongsTo(Item::class, 'parent_id');
@@ -71,18 +67,15 @@ class Item extends \Illuminate\Database\Eloquent\Model
     {
         $raw = $this->rawValue($key);
 
-
-
         return $this->entity()->attribute($key)->getValue($raw);
 
     }
 
-    public function showValue($key){
+    public function showValue($key)
+    {
         $raw = $this->rawValue($key);
 
-
         return $this->entity()->attribute($key)->showValue($raw);
-
 
     }
 
@@ -233,5 +226,10 @@ class Item extends \Illuminate\Database\Eloquent\Model
 
         }
 
+    }
+
+    public function childSingleItem($key)
+    {
+        return $this->children()->where('entity', $key)->first();
     }
 }

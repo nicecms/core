@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Nice\Core\Contracts\ExternalItemProvider;
 use Nice\Core\Contracts\ExternalValueProvider;
+use Nice\Core\Facades\Entities;
 
 class Entity
 {
@@ -70,7 +71,13 @@ class Entity
 
     public function namePlural()
     {
-        return $this->param('name_plural');
+        $plural = $this->param('name_plural');
+
+        if (!$plural) {
+            $plural = $this->name();
+        }
+
+        return $plural;
     }
 
     /**
@@ -112,7 +119,7 @@ class Entity
         $schema = data_get($this->schema, 'attributes.' . $key, []);
 
         if (!$schema) {
-            return null;
+            throw new \Exception($key.' attribute not found for '.$this->key);
         }
 
         return $attribute = new Attribute($key, $schema);
@@ -192,6 +199,26 @@ class Entity
         }
 
         return app($class);
+    }
+
+    public function singleItem($parent = null)
+    {
+
+        if ($this->isMultiple()) {
+
+            throw new \Exception('Entity ' . $this->key() . ' is multiple');
+        }
+
+        $item = Item::where('entity', $this->key());
+
+        if ($parent) {
+            $item->where('parent_id', $parent->id);
+        }
+
+        $item = $item->first();
+
+        return $item;
+
     }
 
 }
