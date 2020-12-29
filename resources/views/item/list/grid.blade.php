@@ -26,7 +26,7 @@
                         @foreach($entity->children() as $childEntity)
 
                             <p>
-                                <a href="{{$childEntity->editorIndexRoute($item)}}">{{$childEntity->param('name_plural')}}
+                                <a href="{{$childEntity->editorIndexRoute($item)}}">{{$childEntity->namePlural()}}
                                     @if($childEntity->isMultiple())
                                         ({{$item->children($childEntity)->count()}})
                                     @endif
