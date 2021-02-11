@@ -52,6 +52,10 @@
             <th>Ссылка</th>
         @endif
 
+        @if($entity->param('editor.timestamps'))
+            <th>Создано / Обновлено</th>
+        @endif
+
         <th>
             Действия
         </th>
@@ -124,6 +128,13 @@
                 </td>
             @endif
 
+            @if($entity->param('editor.timestamps'))
+                <td>
+                    {{$item->created_at->format('Y-m-d H:i:s')}} <br>
+                    {{$item->updated_at->format('Y-m-d H:i:s')}}
+                </td>
+            @endif
+
             <td style="font-style: normal; min-width: 212px">
 
                 <a href="{{$item->editorEditRoute()}}" class="btn btn-sm btn-primary">редактировать</a>
@@ -167,40 +178,39 @@
 
 
     <script type="text/javascript">
-        $(function () {
+      $(function () {
 
-            $('.items tbody').sortable(
-                {
-                    handle: '.lever',
-                    placeholder: 'placeholder_row',
-                    axis: 'y',
-                    revert: 200,
-                    classes: {
-                        'ui-sortable-helper': 'highlight'
-                    },
-                    update: function (event, ui) {
+        $('.items tbody').sortable(
+          {
+            handle: '.lever',
+            placeholder: 'placeholder_row',
+            axis: 'y',
+            revert: 200,
+            classes: {
+              'ui-sortable-helper': 'highlight',
+            },
+            update: function (event, ui) {
 
-                        var ids = []
+              var ids = []
 
-                        $('[data-item-id]').each(function (index) {
+              $('[data-item-id]').each(function (index) {
 
-                            ids.push($(this).data('item-id'))
+                ids.push($(this).data('item-id'))
 
-                        })
+              })
 
-                        $.post('{{route(config('nice.route_name').'item.assign_positions')}}', {items: ids}, function (data) {
+              $.post('{{route(config('nice.route_name').'item.assign_positions')}}', { items: ids }, function (data) {
 
-                            //
+                //
 
-                        }, 'json')
+              }, 'json')
 
+            },
 
-                    }
+          },
+        )
 
-                }
-            )
-
-        })
+      })
     </script>
 
 @endif
