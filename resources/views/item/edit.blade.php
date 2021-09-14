@@ -88,8 +88,8 @@
 
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary btn-lg" name="state" value="published">Сохранить</button>
-                        @if($entity->isMultiple())
-                            {{--                            <button type="submit" class="btn btn-outline-primary btn-lg" name="state" value="draft">Сохранить как черновик</button>--}}
+                        @if($entity->isMultiple() && $entity->param('draftable'))
+                            <button type="submit" class="btn btn-outline-primary btn-lg" name="state" value="draft">Сохранить как черновик</button>
                         @endif
                     </div>
                 </div>
