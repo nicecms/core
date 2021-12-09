@@ -135,6 +135,10 @@ class ItemController extends \Illuminate\Routing\Controller
         $item = $entity->makeItem();
 
         $item->url = $request->input('url');
+        
+        if(!$item->url){
+               $item->makeSlug();
+        }
 
         foreach ($entity->attributes() as $attribute) {
 
@@ -212,6 +216,10 @@ class ItemController extends \Illuminate\Routing\Controller
         }
 
         $item->url = $request->input('url');
+        
+        if(!$item->url){
+           $item->makeSlug();
+        }
 
         $item->save();
 
