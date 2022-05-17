@@ -55,15 +55,10 @@ class ItemController extends \Illuminate\Routing\Controller
 
             $parentEntity = Entities::make($parentKey);
 
-            /** @type Entity $parentEntity */
 
-            if ($parentEntity->isExternal()) {
-                $parent = $parentEntity->provider($request->input('parent_id'));
-
-            } else {
                 $parent = Item::findOrFail($request->input('parent_id'));
 
-            }
+
 
             $items->where('parent_id', $parent->id);
 
@@ -135,7 +130,7 @@ class ItemController extends \Illuminate\Routing\Controller
         $item = $entity->makeItem();
 
         $item->url = $request->input('url');
-        
+
         if(!$item->url){
                $item->makeSlug();
         }
@@ -216,7 +211,7 @@ class ItemController extends \Illuminate\Routing\Controller
         }
 
         $item->url = $request->input('url');
-        
+
         if(!$item->url){
            $item->makeSlug();
         }

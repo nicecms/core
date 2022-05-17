@@ -4,8 +4,6 @@ namespace Nice\Core;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Nice\Core\Contracts\ExternalItemProvider;
-use Nice\Core\Contracts\ExternalValueProvider;
 use Nice\Core\Facades\Entities;
 
 class Entity
@@ -51,14 +49,6 @@ class Entity
 
         return $attribute === $this->param('title');
 
-    }
-
-    /**
-     * @return bool
-     */
-    public function isExternal()
-    {
-        return (bool)$this->param('external');
     }
 
     /**
@@ -166,39 +156,6 @@ class Entity
 
         return app('nice_entity_service')->find($this->param('parent'));
 
-    }
-
-    /**
-     * Внешний атрибут - описание объекта вне CMS, привязываемого к экземпляру сущности.
-     * Например Shop, привязанный через external => shop_id к news
-     *
-     * @return Attribute|null
-     */
-    public function externalAttribute()
-    {
-        return $this->attribute($this->externalKey());
-    }
-
-    /**
-     * @return ExternalItemProvider
-     * @throws \Exception
-     */
-    public function provider()
-    {
-
-        if (!$this->hasProvider()) {
-            throw new \Exception('Attribute ' . $this->key() . ' has no provider');
-        }
-
-        $class = data_get($this->schema, 'provider');
-
-        if (!app($class)) {
-            app()->singleton($class, function () use ($class) {
-                return new $class;
-            });
-        }
-
-        return app($class);
     }
 
     public function singleItem($parent = null)

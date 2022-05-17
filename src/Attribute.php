@@ -4,8 +4,6 @@ namespace Nice\Core;
 
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Nice\Core\Contracts\ExternalDataProvider;
-use Nice\Core\Contracts\ExternalValueProvider;
 use Nice\Core\Types\BaseType;
 
 class Attribute
@@ -50,7 +48,6 @@ class Attribute
      */
     public function type()
     {
-
         $name = Str::ucfirst($this->typeKey());
         $class = "Nice\\Core\\Types\\{$name}Type";
         return new $class;
@@ -80,61 +77,21 @@ class Attribute
         return $this->param('name');
     }
 
-    public function hasProvider()
-    {
-        return (bool)data_get($this->schema, 'provider');
-    }
-
-    /**
-     * @return ExternalValueProvider
-     * @throws \Exception
-     */
-    public function provider()
-    {
-
-        if (!$this->hasProvider()) {
-            throw new \Exception('Attribute ' . $this->key() . ' has no provider');
-        }
-
-        $class = data_get($this->schema, 'provider');
-
-        if (!app($class)) {
-            app()->singleton($class, function () use ($class) {
-                return new $class;
-            });
-        }
-
-        return app($class);
-    }
-
     public function getValue($raw)
     {
-        if ($this->hasProvider()) {
-            return $this->provider()->value($raw);
-        }
-
         return $this->type()->prepareValue($raw, $this);
     }
 
     public function showValue($raw)
     {
-        if ($this->hasProvider()) {
-            $value = $this->provider()->value($raw);
-        }
-        else{
-            $value = $this->type()->prepareValue($raw, $this);
-        }
+        $value = $this->type()->prepareValue($raw, $this);
 
-        if(\View::exists("nice::types." . $this->typeKey() . ".show")){
 
+        if (\View::exists("nice::types." . $this->typeKey() . ".show")) {
             return view("nice::types." . $this->typeKey() . ".show", ['attribute' => $this, 'value' => $value]);
-
-        }
-        else{
+        } else {
             return $value;
         }
-
     }
-
 
 }
