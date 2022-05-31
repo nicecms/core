@@ -50,10 +50,8 @@
     <div class="h5 text-muted">
 
         @if($parent)
-
             <div>{{$parent->entity()->name()}} - {{$parent->title()}}</div>
         @endif
-
 
         @foreach($requestAttributes as $key => $value)
 
@@ -64,7 +62,6 @@
         @endforeach
 
     </div>
-
 
     <div class="row mt-3">
 
@@ -84,6 +81,7 @@
                                 </div>
                             </div>
                         </div>
+
                     @endif
 
                     @foreach($entity->attributes() as $attribute)
@@ -118,8 +116,8 @@
 
             @if($entity->param('related'))
 
-                @foreach($entity->param('related') as $relatedEntityKey)
-                    @include('nice::components.related.list', ['relatedEntity' => \Entities::make($relatedEntityKey), 'item' => new \Nice\Core\Item])
+                @foreach($entity->param('related') as $relatedEntityKey => $relatedEntityView)
+                    @include('nice::components.related.'.$relatedEntityView, ['relatedEntity' => \Entities::make($relatedEntityKey), 'item' => (new \Nice\Core\Item())])
                 @endforeach
 
             @endif
@@ -127,7 +125,6 @@
         </div>
 
     </div>
-
 
     {!! Form::close() !!}
 
