@@ -7,7 +7,6 @@
 
 @section('breadcrumbs')
 
-
     @if($parent)
         @foreach($parent->parentsChain()->reverse() as $pItem)
 
@@ -20,7 +19,8 @@
     @endif
 
     @if($entity->isMultiple())
-        <li class="breadcrumb-item"><a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
+        <li class="breadcrumb-item">
+            <a href="{{$entity->editorIndexRoute($parent)}}">{{$entity->param('name_plural')}}</a>
         </li>
     @endif
 
@@ -116,11 +116,13 @@
 
         <div class="col-4">
 
-            {{--            @if($entity->hasHelpImage())--}}
+            @if($entity->param('related'))
 
-            {{--                @include('admin.entity.components.help')--}}
+                @foreach($entity->param('related') as $relatedEntityKey)
+                    @include('nice::components.related.list', ['relatedEntity' => \Entities::make($relatedEntityKey), 'item' => new \Nice\Core\Item])
+                @endforeach
 
-            {{--            @endif--}}
+            @endif
 
         </div>
 
@@ -128,8 +130,6 @@
 
 
     {!! Form::close() !!}
-
-    {{--    @include('admin.entity.scripts')--}}
 
 @endsection
 

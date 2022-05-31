@@ -18,7 +18,8 @@
     @endif
 
     @if($entity->isMultiple())
-        <li class="breadcrumb-item"><a href="{{$item->editorIndexRoute()}}">{{$entity->param('name_plural')}}</a>
+        <li class="breadcrumb-item">
+            <a href="{{$item->editorIndexRoute()}}">{{$entity->param('name_plural')}}</a>
         </li>
     @endif
 
@@ -27,8 +28,6 @@
 
 
 @section('content')
-
-
 
     {!! Form::open(['files' => true, 'route' => [ config('nice.route_name').'item.update', $entity->key(), $item->id], 'method' => 'POST' ]) !!}
 
@@ -47,9 +46,10 @@
 
     @if($entity->hasUrl())
 
-    <div class="mb-3">
-        Ссылка: <a href="{{$item->fullUrl()}}">{{$item->fullUrl()}}</a>
-    </div>
+        <div class="mb-3">
+            Ссылка:
+            <a href="{{$item->fullUrl()}}">{{$item->fullUrl()}}</a>
+        </div>
     @endif
 
     <div class="row">
@@ -65,12 +65,11 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    {!! Form::label('url', 'URL') !!}
+                                    {!! Form::label('url', 'Slug (для URL)') !!}
                                     {!! Form::text('url', old('url', $item->url), ['class' => 'form-control', 'placeholder' => 'URL']) !!}
                                 </div>
                             </div>
                         </div>
-
 
                     @endif
 
@@ -99,11 +98,13 @@
 
         <div class="col-4">
 
-            {{--            @if($entity->hasHelpImage())--}}
+            @if($entity->param('related'))
 
-            {{--                @include('admin.entity.components.help')--}}
+                @foreach($entity->param('related') as $relatedEntityKey => $relatedEntityView)
+                    @include('nice::components.related.'.$relatedEntityView, ['relatedEntity' => \Entities::make($relatedEntityKey), 'item' => $item])
+                @endforeach
 
-            {{--            @endif--}}
+            @endif
 
         </div>
 

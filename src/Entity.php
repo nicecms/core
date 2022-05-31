@@ -178,4 +178,12 @@ class Entity
 
     }
 
+    public function itemsQuery(){
+        return Item::where('entity', $this->key());
+    }
+
+    public function __toString(){
+        return $this->key();
+    }
+
 }

@@ -22,10 +22,6 @@ class NiceCoreServiceProvider extends ServiceProvider
             return new EntityService();
         });
 
-//        $this->app->singleton('nice_type_registry', function ($app) {
-//            return new TypeRegistry();
-//        });
-
         $this->mergeConfigFrom(
             __DIR__ . '/../config/nice.php', 'nice'
         );
@@ -41,6 +37,7 @@ class NiceCoreServiceProvider extends ServiceProvider
             __DIR__ . '/../config/nice.php' => config_path('nice.php'),
             __DIR__ . '/../public/js/ckeditor/ckeditor.js' => public_path('/js/ckeditor/ckeditor.js')
         ]);
+
 
     }
 

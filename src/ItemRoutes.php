@@ -8,14 +8,6 @@ trait ItemRoutes
     public function editorIndexRoute($query = [])
     {
 
-//        $query = [$this->entity];
-//
-//
-//
-//        if ($this->parent_id) {
-//            $query['parent_id'] = $this->parent_id;
-//        }
-
         if (!$this->entity()->isMultiple()) {
 
             return $this->editorEditRoute();
@@ -23,8 +15,6 @@ trait ItemRoutes
         }
 
         return $this->entity()->editorIndexRoute($this->parent, $query);
-
-//        return route(config('nice.route_name') . 'item.index', $query);
 
     }
 

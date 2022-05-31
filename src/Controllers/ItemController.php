@@ -2,6 +2,7 @@
 
 namespace Nice\Core\Controllers;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Nice\Core\Entity;
 use Nice\Core\Facades\Entities;
@@ -12,7 +13,6 @@ class ItemController extends \Illuminate\Routing\Controller
 
     public function __construct(Request $request)
     {
-
     }
 
     /**
@@ -23,7 +23,6 @@ class ItemController extends \Illuminate\Routing\Controller
      */
     public function withAttributes(Request $request, $entity, $items = null)
     {
-
         $requestAttributes = $request->only($entity->attributesKeys());
 
         if ($items) {
@@ -33,12 +32,10 @@ class ItemController extends \Illuminate\Routing\Controller
         view()->share('requestAttributes', $requestAttributes);
 
         return $requestAttributes;
-
     }
 
     public function index(Request $request, $name)
     {
-
         $entity = Entities::make($name);
 
         /** @type Entity $entity */
@@ -50,18 +47,13 @@ class ItemController extends \Illuminate\Routing\Controller
         $items->where('entity', $entity->key());
 
         if ($request->input('parent_id')) {
-
             $parentKey = $entity->param('parent');
 
             $parentEntity = Entities::make($parentKey);
 
-
-                $parent = Item::findOrFail($request->input('parent_id'));
-
-
+            $parent = Item::findOrFail($request->input('parent_id'));
 
             $items->where('parent_id', $parent->id);
-
         } else {
             $parent = null;
         }
@@ -69,17 +61,13 @@ class ItemController extends \Illuminate\Routing\Controller
         # если не множественное - редиректим на создание или редактирование
 
         if (!$entity->isMultiple()) {
-
             $item = $items->first();
 
             if (!$item) {
                 return redirect()->route($entity->editorCreateRoute($parent));
             } else {
-
                 return redirect()->route($item->editorEditRoute());
-
             }
-
         }
 
         #
@@ -97,7 +85,6 @@ class ItemController extends \Illuminate\Routing\Controller
         $items = $items->get();
 
         return view('nice::item.index', ['entity' => $entity, 'items' => $items, 'parent' => $parent]);
-
     }
 
     public function create(Request $request, $name)
@@ -107,9 +94,7 @@ class ItemController extends \Illuminate\Routing\Controller
         # передача обязательных значений
 
         if ($request->input('parent_id')) {
-
             $parent = Item::findOrFail($request->input('parent_id'));
-
         } else {
             $parent = null;
         }
@@ -119,62 +104,59 @@ class ItemController extends \Illuminate\Routing\Controller
         $requestAttributes = $this->withAttributes($request, $entity);
 
         return view('nice::item.create', ['entity' => $entity, 'parent' => $parent]);
-
     }
 
     public function store(Request $request, $name)
     {
-
         $entity = Entities::make($name);
 
         $item = $entity->makeItem();
 
+        /** @type Item $item */
+
         $item->url = $request->input('url');
 
-        if(!$item->url){
-               $item->makeSlug();
+        if (!$item->url) {
+            $item->makeSlug();
         }
 
         foreach ($entity->attributes() as $attribute) {
-
             if ($attribute->type()->isInputFile()) {
                 $data = $request->file($attribute->key());
 
                 if (!$data) {
                     continue;
                 }
-
             } else {
                 $data = $request->input($attribute->key());
-
             }
 
             $storable = $attribute->type()->storable($data, $attribute, $item);
 
             $item->setValue($attribute->key(), $storable);
-
         }
 
         $item->parent_id = $request->input('parent_id');
 
         $item->save();
 
+        # related
+
+        $this->setRelated($request, $item);
+
         #
 
         $requestAttributes = json_decode($request->input('request_attributes', "[]"), true);
 
         return redirect()->to($item->editorIndexRoute($requestAttributes));
-
     }
 
     public function show()
     {
-
     }
 
     public function edit(Request $request, $name, $id)
     {
-
         $item = Item::findOrFail($id);
 
         $parent = $item->parent;
@@ -191,35 +173,32 @@ class ItemController extends \Illuminate\Routing\Controller
         $entity = $item->entity();
 
         foreach ($entity->attributes() as $attribute) {
-
             if ($attribute->type()->isInputFile()) {
                 $data = $request->file($attribute->key());
 
                 if (!$data) {
                     continue;
                 }
-
             } else {
                 $data = $request->input($attribute->key());
-
             }
 
             $storable = $attribute->type()->storable($data, $attribute, $item);
 
             $item->setValue($attribute->key(), $storable);
-
         }
 
         $item->url = $request->input('url');
 
-        if(!$item->url){
-           $item->makeSlug();
+        if (!$item->url) {
+            $item->url = $item->makeSlug();
         }
 
         $item->save();
 
-        return redirect()->to($item->editorIndexRoute());
+        $this->setRelated($request, $item);
 
+        return redirect()->to($item->editorIndexRoute());
     }
 
     public function destroy(Request $request, $name, $id)
@@ -229,7 +208,6 @@ class ItemController extends \Illuminate\Routing\Controller
         $item->delete();
 
         return redirect()->to($item->editorIndexRoute());
-
     }
 
     public function assignPositions(Request $request)
@@ -241,4 +219,40 @@ class ItemController extends \Illuminate\Routing\Controller
         return ['success' => true];
     }
 
+    public function setRelated(Request $request, Item $item)
+    {
+        if ($request->input('related')) {
+
+            $item->clearRelated();
+
+            foreach ($request->input('related', []) as $relatedEntityKey => $relatedIDs) {
+                if (is_array($relatedIDs)) {
+                    $item->setRelated($relatedEntityKey, $relatedIDs);
+                } else {
+                    $names = explode(',', $relatedIDs);
+
+                    $new = [];
+
+                    foreach ($names as $name) {
+                        $name = trim($name);
+
+                        $relatedItem = Item::whereValueOf('name', $name)->first();
+
+                        if (!$relatedItem) {
+                            $entity = Entities::make($relatedEntityKey);
+
+                            $relatedItem = $entity->makeItem();
+                            $relatedItem->setValue('name', $name);
+                            $relatedItem->save();
+                        }
+
+                        $new[] = $relatedItem;
+                    }
+
+                    $item->setRelated($relatedEntityKey, (new Collection($new))->pluck('id')->all());
+                }
+            }
+        }
+
+    }
 }
