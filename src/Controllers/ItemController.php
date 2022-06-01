@@ -146,9 +146,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
         #
 
-        $requestAttributes = json_decode($request->input('request_attributes', "[]"), true);
-
-        return redirect()->to($item->editorIndexRoute($requestAttributes));
+        return redirect()->to($item->editorEditRoute());
     }
 
     public function show()
@@ -198,7 +196,7 @@ class ItemController extends \Illuminate\Routing\Controller
 
         $this->setRelated($request, $item);
 
-        return redirect()->to($item->editorIndexRoute());
+        return redirect()->to($item->editorEditRoute());
     }
 
     public function destroy(Request $request, $name, $id)
