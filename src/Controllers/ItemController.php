@@ -114,12 +114,6 @@ class ItemController extends \Illuminate\Routing\Controller
 
         /** @type Item $item */
 
-        $item->url = $request->input('url');
-
-        if (!$item->url) {
-            $item->makeSlug();
-        }
-
         foreach ($entity->attributes() as $attribute) {
             if ($attribute->type()->isInputFile()) {
                 $data = $request->file($attribute->key());
@@ -137,6 +131,12 @@ class ItemController extends \Illuminate\Routing\Controller
         }
 
         $item->parent_id = $request->input('parent_id');
+
+        $item->url = $request->input('url');
+
+        if (!$item->url) {
+            $item->url = $item->makeSlug();
+        }
 
         $item->save();
 
