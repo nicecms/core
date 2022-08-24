@@ -76,9 +76,22 @@ class Item extends Model
         return $this->belongsToMany(static::class, 'content_item_relations', 'item_id', 'related_id');
     }
 
+    public function allRelators()
+    {
+        return $this->belongsToMany(static::class, 'content_item_relations', 'related_id', 'item_id' );
+    }
+
     public function relatedQuery($entity)
     {
         return $this->allRelated()
+            //->join('content_items as ci', 'ci.id', '=' , 'content_item_relations.item_id')
+            //->where('content_items.entity', $this->entity)
+            ->where('content_items.entity', (string)$entity);
+    }
+
+    public function relatorsQuery($entity)
+    {
+        return $this->allRelators()
             //->join('content_items as ci', 'ci.id', '=' , 'content_item_relations.item_id')
             //->where('content_items.entity', $this->entity)
             ->where('content_items.entity', (string)$entity);
