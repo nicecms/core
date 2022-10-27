@@ -15,7 +15,7 @@
 
                     // Headers sent along with the XMLHttpRequest to the upload server.
                     headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                        'X-CSRF-TOKEN': '{{csrf_token()}}'
                     }
                 },
                 toolbar: {
@@ -84,4 +84,3 @@
 
 
 </script>
-
